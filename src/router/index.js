@@ -41,7 +41,7 @@ export default new Router({
             path: '/home',
             name: '文章管理',
             iconClass: 'fa fa-users',
-            redirect: '/home/post',
+            redirect: '/home',
             component: resolve => require(['@/components/Home'], resolve ),
             children:[
                 {
@@ -52,7 +52,7 @@ export default new Router({
                 },
                 {
                     path: '/home/publishPost',
-                    name: '发布文档',
+                    name: '发布文章',
                     iconClass: 'fa fa-list',
                     component: () => import('@/components/post/PublishPost')
                 },
@@ -68,6 +68,29 @@ export default new Router({
                     iconClass: 'fa fa-list',
                     component: () => import('@/components/Editor/index')
                 }
+            ]
+        },
+        
+
+        {
+            path: '/home',
+            name: '日志管理',
+            iconClass: 'fa fa-users',
+            redirect: '/home',
+            component: resolve => require(['@/components/Home'], resolve ),
+            children:[
+                {
+                    path: '/home/log/loginLog',
+                    name: '登录日志',
+                    iconClass: 'fa fa-list',
+                    component: () => import('@/components/log/LoginLog')
+                },
+                {
+                    path: '/home/log/operatorLog',
+                    name: '操作日志',
+                    iconClass: 'fa fa-list',
+                    component: () => import('@/components/log/PostLog')
+                },
             ]
         }
     ],

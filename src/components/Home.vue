@@ -23,16 +23,7 @@
         <el-container>
           <el-main>
             <BreadcrumbVue/>
-            <el-tabs v-model="editableTabsValue" type="card" editable @edit="handleTabsEdit">
-              <el-tab-pane
-                :key="item.name"
-                v-for="(item, index) in editableTabs"
-                :label="item.title"
-                :name="item.name"
-              >
-                {{item.content}}
-              </el-tab-pane>
-            </el-tabs>
+            <Tabs/>
             <div class="cont">
               <router-view></router-view>
             </div>
@@ -53,30 +44,19 @@ import Header from './common/Header.vue'
 import Footer from './common/Footer.vue'
 import Menu from './common/Menu.vue'
 import BreadcrumbVue from './common/Breadcrumb.vue'
+//import Tabs from './common/Tabs.vue'
+import Tabs from './TagsView/index.vue'
 
 export default {
     components:{
       Header,
       Footer,
       Menu,
-      BreadcrumbVue
+      BreadcrumbVue,
+      Tabs
     },
 
-    data() {
-      return {
-        editableTabsValue: '2',
-        editableTabs: [{
-          title: 'Tab 1',
-          name: '1',
-          content: 'Tab 1 content'
-        }, {
-          title: 'Tab 2',
-          name: '2',
-          content: 'Tab 2 content'
-        }],
-        tabIndex: 2
-      }
-    },
+    
     methods: {
       handleTabsEdit(targetName, action) {
         if (action === 'add') {

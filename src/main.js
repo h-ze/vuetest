@@ -24,6 +24,15 @@ import service from './service'
 Vue.prototype.axios = axios
 Vue.prototype.service = service
 
+router.beforeEach((to,from,next) =>{
+  if(!localStorage.getItem('token')){
+    if(to.path !== '/login'){
+      next('/login')
+    }else next()
+  }
+  next()
+})
+
 //import '../plugins/element.js'
 Vue.config.productionTip = false
 

@@ -10,8 +10,7 @@
   <div class="login">
     <el-card class="box-card">
         <div slot="header" class="clearfix">
-            <span>通用后台管理系统</span>
-            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+            <span>Login</span>
         </div>
     
         <el-form label-width="80px" :model="form" ref="form" :rules="rules">
@@ -81,6 +80,8 @@ export default {
                         if(res.code === 100000){
                             console.log('login',res)
                             setToken('token',res.data)
+                            //setToken('token','')
+
                             setToken('username',this.form.username)
 
                             this.$message({message: res.message,type : 'success'})

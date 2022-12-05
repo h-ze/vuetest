@@ -9,7 +9,7 @@
 <template>
     <div class="footer">
         <el-card>
-            Frontend 2022 Casey
+            created by 2022
         </el-card>
     </div>
   </template>

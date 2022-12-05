@@ -11,7 +11,7 @@
     <el-header>
 
         <div class="title">
-            通用后台管理系统
+            Header
         </div>
         <div>{{name}}</div>
         <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
@@ -50,8 +50,9 @@ export default {
 <style lang="scss" scoped>
 .header{
     .el-header{
-        background-color: aqua;
-        color: #fff;
+        //background-color: aqua;
+        //color: #fff;
+        color:gray;
         line-height: 60px;
         display: flex;
         justify-content: space-between;
