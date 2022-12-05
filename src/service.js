@@ -2,7 +2,7 @@
  * @Author: hz hz15858@163.com
  * @Date: 2022-12-03 13:19:28
  * @LastEditors: hz hz15858@163.com
- * @LastEditTime: 2022-12-04 14:40:53
+ * @LastEditTime: 2022-12-05 21:37:21
  * @FilePath: /vuetest/src/service.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -39,6 +39,7 @@ service.interceptors.response.use((res) => {
 
     // 未设置状态码则默认成功状态
     const code = res.data.code || 200;
+    
     // 获取错误信息
     //const msg = errorCode[code] || res.data.msg || errorCode['default']
     const msg = 'response error'
@@ -46,6 +47,7 @@ service.interceptors.response.use((res) => {
     if(res.request.responseType ===  'blob' || res.request.responseType ===  'arraybuffer'){
         return res.data
     }
+    
 
     if (code === 999999 ) {
         if (!isRelogin.show) {

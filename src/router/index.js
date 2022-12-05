@@ -2,7 +2,7 @@
  * @Author: hz hz15858@163.com
  * @Date: 2022-12-02 19:15:20
  * @LastEditors: hz hz15858@163.com
- * @LastEditTime: 2022-12-03 21:36:09
+ * @LastEditTime: 2022-12-05 21:41:00
  * @FilePath: /vuetest/src/router/index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -41,7 +41,7 @@ export default new Router({
             path: '/home',
             name: '文章管理',
             iconClass: 'fa fa-users',
-            redirect: '/home',
+            redirect: '/home/post',
             component: resolve => require(['@/components/Home'], resolve ),
             children:[
                 {
@@ -73,7 +73,7 @@ export default new Router({
         
 
         {
-            path: '/home',
+            path: '/home/log',
             name: '日志管理',
             iconClass: 'fa fa-users',
             redirect: '/home',
