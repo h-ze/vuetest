@@ -8,7 +8,7 @@
 -->
 <template>
   <div class="postList">
-    <el-form :inline="true" :model="formInline" class="demo-form-inline" size="small">
+    <!-- <el-form :inline="true" :model="formInline" class="demo-form-inline" size="small">
     <el-form-item label="姓名">
         <el-input v-model="formInline.name" placeholder="请输入姓名查询"></el-input>
     </el-form-item>
@@ -18,8 +18,93 @@
     <el-form-item>
         <el-button type="primary" @click="onReset">重置</el-button>
     </el-form-item>
-    </el-form>
-    <el-table :data="tableData" v-loading= "loading" border style="width: 100%">
+    </el-form> -->
+
+
+
+
+
+
+    <el-form :model="formInline" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px" class="demo-form-inline">
+          <el-form-item label="用户名称" prop="title">
+            <el-input
+              v-model="formInline.name"
+              placeholder="请输入用户名称"
+              clearable
+              style="width: 240px"
+              @keyup.enter.native="onSubmit"
+            />
+          </el-form-item>
+          <el-form-item label="手机号码" prop="title">
+            <el-input
+              v-model="formInline.title"
+              placeholder="请输入手机号码"
+              clearable
+              style="width: 240px"
+              @keyup.enter.native="onSubmit"
+            />
+          </el-form-item>
+          <el-form-item label="状态" prop="title">
+            <el-select
+              v-model="formInline.title"
+              placeholder="用户状态"
+              clearable
+              style="width: 240px"
+            >
+              <!-- <el-option
+                v-for="dict in dict.type.sys_normal_disable"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              /> -->
+            </el-select>
+          </el-form-item>
+          <el-form-item label="创建时间">
+            <el-date-picker
+              v-model="dateRange"
+              style="width: 240px"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            ></el-date-picker>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="onSubmit">搜索</el-button>
+            <el-button icon="el-icon-refresh" size="mini" @click="onReset">重置</el-button>
+          </el-form-item>
+        </el-form>
+
+
+
+    <el-row :gutter="10" class="mb8" style="">
+        <el-col :span="1.5">
+            <el-button
+            type="success"
+            plain
+            icon="el-icon-edit"
+            size="mini"
+            :disabled="single"
+            @click="handleUpdate"
+            >修改</el-button>
+        </el-col>
+        <el-col :span="1.5">
+            <el-button
+            type="danger"
+            plain
+            icon="el-icon-delete"
+            size="mini"
+            :disabled="multiple"
+            @click="handleDelete"
+            >删除</el-button>
+        </el-col>
+        <!-- <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns" class="righttoolbar"></right-toolbar>     -->
+    </el-row>
+
+    <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+    <!-- <el-table :data="tableData" v-loading= "loading" border style="width: 100%"> -->
+        <el-table-column type="selection" width="50" align="center" />
         <el-table-column prop="postId" label="文档Id" align="center"></el-table-column>
         <el-table-column prop="authorId" label="作者Id" align="center"></el-table-column>
         <el-table-column prop="channelId" label="地址" align="center"></el-table-column>
@@ -34,13 +119,38 @@
         <el-table-column prop="title" label="标题" align="center"></el-table-column>
         <el-table-column prop="views" label="查看数" align="center"></el-table-column>
         <el-table-column prop="weight" label="比重" align="center"></el-table-column>
-        <el-table-column label="操作" align="center">
-            <template slot-scope="scope">
-                <el-button type="danger" size="mini" icon="el-icon-delete" @click="del(scope.postId)"></el-button>
-                <el-button type="danger" size="mini" icon="el-icon-edit" @click="updatePostMessage"></el-button>
-                
+        <el-table-column
+            label="操作"
+            align="center"
+            width="160"
+            class-name="small-padding fixed-width"
+          >
+            <template slot-scope="scope" v-if="scope.row.userId !== 1">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
+                @click="handleUpdate(scope.row)"
+              >修改</el-button>
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-delete"
+                @click="handleDelete(scope.row)"
+              >删除</el-button>
+              <!-- <el-dropdown size="mini" @command="(command) => handleCommand(command, scope.row)" >
+                <span class="el-dropdown-link">
+                  <i class="el-icon-d-arrow-right el-icon--right"></i>更多
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item command="handleResetPwd" icon="el-icon-key"
+                    v-hasPermi="['system:user:resetPwd']">重置密码</el-dropdown-item>
+                  <el-dropdown-item command="handleAuthRole" icon="el-icon-circle-check"
+                    v-hasPermi="['system:user:edit']">分配角色</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown> -->
             </template>
-        </el-table-column>
+          </el-table-column>
     </el-table>
 
     <el-dialog title="修改博客信息" :visible.sync="dialogFormVisible">
@@ -115,7 +225,14 @@ export default {
         form:{
             name: ''
         },
-        formLabelWidth: '120px'
+        formLabelWidth: '120px',
+        showSearch: true,
+        // 非多个禁用
+        multiple: true,
+        // 日期范围
+        dateRange: [],
+        // 非单个禁用
+        single: true,
       }
     },
     created(){
@@ -173,8 +290,44 @@ export default {
         },
         updatePostMessage(){
             this.dialogFormVisible =true
+        },
+        // 多选框选中数据
+        handleSelectionChange(selection) {
+          this.single = selection.length != 1;
+          this.multiple = !selection.length;
+        },
+        /** 删除按钮操作 */
+        handleDelete(row) {
+        const userIds = row.userId || this.ids;
+        this.$modal.confirm('是否确认删除用户编号为"' + userIds + '"的数据项？').then(function() {
+            return delUser(userIds);
+        }).then(() => {
+            this.getList();
+            this.$modal.msgSuccess("删除成功");
+        }).catch(() => {});
+        },
+        /** 修改按钮操作 */
+        handleUpdate(row) {
+        this.reset();
+        this.getTreeselect();
+        const userId = row.userId || this.ids;
+            getUser(userId).then(response => {
+                this.form = response.data;
+                this.postOptions = response.posts;
+                this.roleOptions = response.roles;
+                this.form.postIds = response.postIds;
+                this.form.roleIds = response.roleIds;
+                this.open = true;
+                this.title = "修改用户";
+                this.form.password = "";
+            });
+        },
+        /** 搜索按钮操作 */
+        handleQuery() {
+            this.queryParams.pageNum = 1;
+            this.getList();
+            },
         }
-    }
   }
 </script>
 

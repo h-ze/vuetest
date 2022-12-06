@@ -19,8 +19,11 @@ export function login(data){
     })
 }
 
+export function addPost(data){
+    return service.post('postController/addPost',data)
+}
+
 export function postList(param){
-    console.log("132",param)
     return service.get('postController/getPosts',{params: param || {}})
     // return service({
     //     method: 'get',

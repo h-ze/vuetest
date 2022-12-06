@@ -34,7 +34,7 @@
 
 <script>
 import { nameRule, passRule } from '../utils/vaildate.js' 
-import { setToken } from  '@/utils/setToken.js'
+import { setCookie } from  '@/utils/cookie.js'
 import { login } from '@/api/api.js'
 export default {
     data(){
@@ -79,10 +79,10 @@ export default {
 
                         if(res.code === 100000){
                             console.log('login',res)
-                            setToken('token',res.data)
-                            //setToken('token','')
+                            setCookie('token',res.data)
+                            //setCookie('token','')
 
-                            setToken('username',this.form.username)
+                            setCookie('username',this.form.username)
 
                             this.$message({message: res.message,type : 'success'})
                             this.$router.push('/home/post')
@@ -95,7 +95,7 @@ export default {
                     })
                     // this.service.post('server/server',this.form)
                     // .then(res =>{
-                    //     setToken('token','123')
+                    //     setCookie('token','123')
                     //     console.log(res)
                     //     this.$message({message: res.message,type : 'success'})
                     //     this.$router.push('/home')
@@ -108,7 +108,7 @@ export default {
                     //     if(res.status === 200){
                     //         //localStorage.setItem('username',res.data.username)
                     //         //localStorage.setItem('data',res.data)
-                    //         setToken('data',res.data)
+                    //         setCookie('data',res.data)
                     //         //this.$message({message: res.data.message,type: 'success'})
                     //         this.$router.push('/home')
                     //     }

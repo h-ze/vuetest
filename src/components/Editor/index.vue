@@ -40,7 +40,7 @@ export default {
     /* 最小高度 */
     minHeight: {
       type: Number,
-      default: null,
+      default: 300,
     },
     /* 只读 */
     readOnly: {

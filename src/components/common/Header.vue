@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import {getToken} from '@/utils/setToken'
+import {getCookie} from '@/utils/cookie'
 export default {
     data(){
         return {
@@ -42,7 +42,7 @@ export default {
         }
     },
     created(){
-        this.name =getToken('username')
+        this.name =getCookie('username')
     }
 }
 </script>

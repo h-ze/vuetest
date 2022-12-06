@@ -17,8 +17,13 @@ import 'font-awesome/css/font-awesome.min.css'
 
 import axios from 'axios'
 import router from './router'
-
 import service from './service'
+// 自定义表格工具组件
+import RightToolbar from "@/components/RightToolbar"
+import Editor from "@/components/Editor"
+
+Vue.component('RightToolbar', RightToolbar)
+Vue.component('Editor', Editor)
 
 
 Vue.prototype.axios = axios

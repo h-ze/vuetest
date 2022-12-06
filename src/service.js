@@ -8,7 +8,7 @@
  */
 import axios from 'axios'
 
-import { getToken } from '@/utils/setToken.js'
+import { getCookie } from '@/utils/cookie.js'
 import { Notification, MessageBox, Message, Loading } from 'element-ui'
 const service = axios.create({
     baseURL: '/api',
@@ -23,7 +23,7 @@ export let isRelogin = { show: false };
 service.interceptors.request.use((config) => {
     //在请求之前做些什么（获取并设置token）
     console.log('request',config)
-    config.headers['token'] = getToken('token')
+    config.headers['token'] = getCookie('token')
     return config
 },(error) => {
     return Promise.reject(error)
