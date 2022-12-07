@@ -26,55 +26,55 @@
 
 
     <el-form :model="formInline" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px" class="demo-form-inline">
-          <el-form-item label="用户名称" prop="title">
-            <el-input
-              v-model="formInline.name"
-              placeholder="请输入用户名称"
-              clearable
-              style="width: 240px"
-              @keyup.enter.native="onSubmit"
-            />
-          </el-form-item>
-          <el-form-item label="手机号码" prop="title">
-            <el-input
-              v-model="formInline.title"
-              placeholder="请输入手机号码"
-              clearable
-              style="width: 240px"
-              @keyup.enter.native="onSubmit"
-            />
-          </el-form-item>
-          <el-form-item label="状态" prop="title">
-            <el-select
-              v-model="formInline.title"
-              placeholder="用户状态"
-              clearable
-              style="width: 240px"
-            >
-              <!-- <el-option
-                v-for="dict in dict.type.sys_normal_disable"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
-              /> -->
-            </el-select>
-          </el-form-item>
-          <el-form-item label="创建时间">
-            <el-date-picker
-              v-model="dateRange"
-              style="width: 240px"
-              value-format="yyyy-MM-dd"
-              type="daterange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" icon="el-icon-search" size="mini" @click="onSubmit">搜索</el-button>
-            <el-button icon="el-icon-refresh" size="mini" @click="onReset">重置</el-button>
-          </el-form-item>
-        </el-form>
+        <el-form-item label="用户名称" prop="title">
+          <el-input
+            v-model="formInline.name"
+            placeholder="请输入用户名称"
+            clearable
+            style="width: 240px"
+            @keyup.enter.native="onSubmit"
+          />
+        </el-form-item>
+        <el-form-item label="手机号码" prop="title">
+          <el-input
+            v-model="formInline.title"
+            placeholder="请输入手机号码"
+            clearable
+            style="width: 240px"
+            @keyup.enter.native="onSubmit"
+          />
+        </el-form-item>
+        <el-form-item label="状态" prop="title">
+          <el-select
+            v-model="formInline.title"
+            placeholder="用户状态"
+            clearable
+            style="width: 240px"
+          >
+            <!-- <el-option
+              v-for="dict in dict.type.sys_normal_disable"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            /> -->
+          </el-select>
+        </el-form-item>
+        <el-form-item label="创建时间">
+          <el-date-picker
+            v-model="dateRange"
+            style="width: 240px"
+            value-format="yyyy-MM-dd"
+            type="daterange"
+            range-separator="-"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="onSubmit">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="onReset">重置</el-button>
+        </el-form-item>
+    </el-form>
 
 
 
@@ -217,7 +217,7 @@ export default {
         page:1,
         per_page:10,
         total:0,
-        loading:false,
+        loading:true,
         formInline:{
             name:''
         },
@@ -242,6 +242,7 @@ export default {
         getData(params){
             postList(params)
             .then(res =>{
+                this.loading = false
                 if(res.code === 100000){
                     this.total = res.data.totalSize
                     this.tableData =res.data.data
@@ -252,6 +253,7 @@ export default {
         getDataByOther(){
             getPostListByOther({page: this.page,per_page:this.per_page,title:this.formInline.name})
             .then(res =>{
+                this.loading = false
                 if(res.code === 100000){
                     this.total = res.data.totalSize
                     this.tableData =res.data.data
@@ -308,19 +310,19 @@ export default {
         },
         /** 修改按钮操作 */
         handleUpdate(row) {
-        this.reset();
-        this.getTreeselect();
-        const userId = row.userId || this.ids;
-            getUser(userId).then(response => {
-                this.form = response.data;
-                this.postOptions = response.posts;
-                this.roleOptions = response.roles;
-                this.form.postIds = response.postIds;
-                this.form.roleIds = response.roleIds;
-                this.open = true;
-                this.title = "修改用户";
-                this.form.password = "";
-            });
+          this.reset();
+          this.getTreeselect();
+          const userId = row.userId || this.ids;
+              getUser(userId).then(response => {
+                  this.form = response.data;
+                  this.postOptions = response.posts;
+                  this.roleOptions = response.roles;
+                  this.form.postIds = response.postIds;
+                  this.form.roleIds = response.roleIds;
+                  this.open = true;
+                  this.title = "修改用户";
+                  this.form.password = "";
+              });
         },
         /** 搜索按钮操作 */
         handleQuery() {
