@@ -46,6 +46,25 @@ export function getPostListByOther(params){
 }
 
 export function getLogs(params){
-    return service.get('log/logs',{params: params|| {}})
+    return service.get('log/loginLogs',{params: params|| {}})
 
+}
+
+/**
+ * 获取博客相关日志
+ * @param {*} params 
+ * @returns 
+ */
+export function getPostLogs(params){
+    return service.get('log/postLogs',{params: params|| {}})
+
+}
+
+/**
+ * 获取所有的tag
+ * @param {*} param 
+ * @returns 
+ */
+export function getTags(params){
+    return service.get('tagController/getTags',{params: params|| {}})
 }

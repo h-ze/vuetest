@@ -40,34 +40,34 @@ export default new Router({
         {
             path: '/home',
             name: '文章管理',
-            iconClass: 'fa fa-users',
+            iconClass: 'fa fa-modx',
             redirect: '/home/post',
             component: resolve => require(['@/components/Home'], resolve ),
             children:[
                 {
                     path: '/home/post',
                     name: '文章列表',
-                    iconClass: 'fa fa-list',
+                    iconClass: 'fa fa-delicious',
                     component: () => import('@/components/post/PostList')
                 },
                 {
                     path: '/home/publishPost',
                     name: '发布文章',
-                    iconClass: 'fa fa-list',
+                    iconClass: 'fa fa-dropbox',
                     component: () => import('@/components/post/PublishPost')
                 },
                 {
                     path: '/home/PostTab',
                     name: '文章Tab列表',
-                    iconClass: 'fa fa-list',
+                    iconClass: 'fa fa-empire',
                     component: () => import('@/components/post/PostTab')
                 },
-                {
-                    path: '/home/Editor',
-                    name: 'Editor',
-                    iconClass: 'fa fa-list',
-                    component: () => import('@/components/Editor/index')
-                }
+                // {
+                //     path: '/home/Editor',
+                //     name: 'Editor',
+                //     iconClass: 'fa fa-list',
+                //     component: () => import('@/components/Editor/index')
+                // }
             ]
         },
         
@@ -75,20 +75,20 @@ export default new Router({
         {
             path: '/home/log',
             name: '日志管理',
-            iconClass: 'fa fa-users',
+            iconClass: 'fa fa-list',
             redirect: '/home',
             component: resolve => require(['@/components/Home'], resolve ),
             children:[
                 {
                     path: '/home/log/loginLog',
                     name: '登录日志',
-                    iconClass: 'fa fa-list',
+                    iconClass: 'fa fa-gratipay',
                     component: () => import('@/components/log/LoginLog')
                 },
                 {
                     path: '/home/log/operatorLog',
                     name: '操作日志',
-                    iconClass: 'fa fa-list',
+                    iconClass: 'fa fa-opera',
                     component: () => import('@/components/log/PostLog')
                 },
             ]
