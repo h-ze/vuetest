@@ -2,14 +2,64 @@
  * @Author: hz hz15858@163.com
  * @Date: 2022-12-03 15:28:35
  * @LastEditors: hz hz15858@163.com
- * @LastEditTime: 2022-12-06 18:59:55
- * @FilePath: /vuetest/src/components/post/PostList.vue
+ * @LastEditTime: 2022-12-06 19:53:33
+ * @FilePath: /vuetest/src/components/post/LoginLog.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
     <div class="loginLogList">
         
-        <el-form :inline="true" :model="formInline" class="demo-form-inline" size="small">
+        <el-form :model="formInline" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px" class="demo-form-inline">
+        <el-form-item label="用户名称" prop="title">
+          <el-input
+            v-model="formInline.name"
+            placeholder="请输入用户名称"
+            clearable
+            style="width: 240px"
+            @keyup.enter.native="onSubmit"/>
+            </el-form-item>
+            <el-form-item label="手机号码" prop="title">
+            <el-input
+                v-model="formInline.title"
+                placeholder="请输入手机号码"
+                clearable
+                style="width: 240px"
+                @keyup.enter.native="onSubmit"
+            />
+            </el-form-item>
+            <el-form-item label="状态" prop="title">
+            <el-select
+                v-model="formInline.title"
+                placeholder="用户状态"
+                clearable
+                style="width: 240px"
+            >
+                <!-- <el-option
+                v-for="dict in dict.type.sys_normal_disable"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+                /> -->
+            </el-select>
+            </el-form-item>
+            <el-form-item label="创建时间">
+            <el-date-picker
+                v-model="dateRange"
+                style="width: 240px"
+                value-format="yyyy-MM-dd"
+                type="daterange"
+                range-separator="-"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+            ></el-date-picker>
+            </el-form-item>
+            <el-form-item>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="onSubmit">搜索</el-button>
+            <el-button icon="el-icon-refresh" size="mini" @click="onReset">重置</el-button>
+            </el-form-item>
+        </el-form>
+
+        <!-- <el-form :inline="true" :model="formInline" class="demo-form-inline" size="small">
         <el-form-item label="姓名">
             <el-input v-model="formInline.name" placeholder="请输入姓名查询"></el-input>
         </el-form-item>
@@ -19,7 +69,7 @@
         <el-form-item>
             <el-button type="primary" @click="onReset">重置</el-button>
         </el-form-item>
-        </el-form>
+        </el-form> -->
         
         <el-row :gutter="10" class="mb8" style="">
             <el-col :span="1.5">
