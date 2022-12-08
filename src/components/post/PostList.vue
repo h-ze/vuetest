@@ -102,7 +102,7 @@
         <!-- <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns" class="righttoolbar"></right-toolbar>     -->
     </el-row>
 
-    <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange"  @current-change="currenthandleCurrentChange" ref="singleTable">
     <!-- <el-table :data="tableData" v-loading= "loading" border style="width: 100%"> -->
         <el-table-column type="selection" width="50" align="center" />
         <el-table-column prop="postId" label="文档Id" align="center"></el-table-column>
@@ -155,21 +155,41 @@
 
     <el-dialog title="修改博客信息" :visible.sync="dialogFormVisible">
         <el-form :model="form">
-            <el-form-item label="活动名称" :label-width="formLabelWidth">
-            <el-input v-model="form.name" autocomplete="off"></el-input>
+
+            <el-form-item label="文章标题" :label-width="formLabelWidth">
+              <el-input v-model="form.name" autocomplete="off"></el-input>
+            </el-form-item>
+            
+
+            <el-form-item label="文章标签" :label-width="formLabelWidth">
+              <el-input v-model="form.name" autocomplete="off"></el-input>
             </el-form-item>
 
-            <el-form-item label="活动名称" :label-width="formLabelWidth">
-            <el-input v-model="form.name" autocomplete="off"></el-input>
+            <el-form-item label="文章概要" :label-width="formLabelWidth">
+              <el-input v-model="form.name" autocomplete="off"></el-input>
             </el-form-item>
 
-            <el-form-item label="活动名称" :label-width="formLabelWidth">
-            <el-input v-model="form.name" autocomplete="off"></el-input>
-            </el-form-item>
+            <!-- <el-form-item label="活动区域" :label-width="formLabelWidth">
+              <el-select v-model="form.region" placeholder="请选择活动区域">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+              </el-select>
 
-            <el-form-item label="活动名称" :label-width="formLabelWidth">
-            <el-input v-model="form.name" autocomplete="off"></el-input>
+              
+            </el-form-item> -->
+
+
+            <el-form-item label="文章状态" :label-width="formLabelWidth">
+              <el-select v-model="form.status" placeholder="请选择文章对外发布的状态">
+                <el-option
+                  v-for="dict in dicts"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
             </el-form-item>
+            
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -190,7 +210,7 @@
 </template>
 
 <script>
-import { postList,getPostListByOther }  from '@/api/api'
+import { postList,getPostListByOther,deletePost }  from '@/api/api'
 import { del } from 'vue'
 import { Alert } from 'element-ui'
 export default {
@@ -225,7 +245,7 @@ export default {
         form:{
             name: ''
         },
-        formLabelWidth: '120px',
+        formLabelWidth: '90px',
         showSearch: true,
         // 非多个禁用
         multiple: true,
@@ -233,6 +253,25 @@ export default {
         dateRange: [],
         // 非单个禁用
         single: true,
+        ids: [],
+        dicts:[
+          {
+            label:1,
+            value:1
+          },
+          {
+            label:2,
+            value:2
+          },
+          {
+            label:3,
+            value:3
+          },
+          {
+            label:4,
+            value:4
+          }
+        ]
       }
     },
     created(){
@@ -294,42 +333,77 @@ export default {
             this.dialogFormVisible =true
         },
         // 多选框选中数据
-        handleSelectionChange(selection) {
+        handleSelectionChange(selection,rows) {
+          this.ids = selection.map(item => item.postId);
           this.single = selection.length != 1;
           this.multiple = !selection.length;
+
+          selection.map(item => {
+            console.log('item',item.postId)
+            //this.$refs.singleTable.setCurrentRow(item);
+
+          })
+
+          if (rows && row.length > 0) {
+              rows.forEach(row => {
+              console.log('row',item.postId)
+
+              this.$refs.singleTable.toggleRowSelection(row);
+            });
+          }
+        },
+        currenthandleCurrentChange(row){
+
+          this.single = row.length != 1;
+          this.multiple = !row.length;
+          if (row) {
+            this.$refs.singleTable.clearSelection();
+            //this.$refs.singleTable.setCurrentRow(row);
+            this.$refs.singleTable.toggleRowSelection(row);
+          }
         },
         /** 删除按钮操作 */
         handleDelete(row) {
-        const userIds = row.userId || this.ids;
-        this.$modal.confirm('是否确认删除用户编号为"' + userIds + '"的数据项？').then(function() {
-            return delUser(userIds);
-        }).then(() => {
-            this.getList();
-            this.$modal.msgSuccess("删除成功");
-        }).catch(() => {});
+            //const userIds = row.userId || this.ids;
+            const postId =row.postId ||   this.ids.toString();
+            console.log('ROW',row)
+            this.$modal.confirm('是否确认删除编号为"' + postId + '"的数据项？').then(function() {
+                return deletePost({ids:postId});
+            }).then(() => {
+                this.getData({page: this.page,per_page:this.per_page});
+                this.$modal.msgSuccess("删除成功");
+            }).catch(() => {});
         },
         /** 修改按钮操作 */
         handleUpdate(row) {
           this.reset();
           this.getTreeselect();
-          const userId = row.userId || this.ids;
-              getUser(userId).then(response => {
-                  this.form = response.data;
-                  this.postOptions = response.posts;
-                  this.roleOptions = response.roles;
-                  this.form.postIds = response.postIds;
-                  this.form.roleIds = response.roleIds;
-                  this.open = true;
-                  this.title = "修改用户";
-                  this.form.password = "";
-              });
+          this.dialogFormVisible =true
+          // const userId = row.userId || this.ids;
+          //     getUser(userId).then(response => {
+          //         this.form = response.data;
+          //         this.postOptions = response.posts;
+          //         this.roleOptions = response.roles;
+          //         this.form.postIds = response.postIds;
+          //         this.form.roleIds = response.roleIds;
+          //         this.open = true;
+          //         this.title = "修改用户";
+          //         this.form.password = "";
+          //     });
         },
         /** 搜索按钮操作 */
         handleQuery() {
             this.queryParams.pageNum = 1;
             this.getList();
-            },
-        }
+        },
+        reset(){
+
+        },
+        getTreeselect (){
+
+        },
+    },
+        
   }
 </script>
 

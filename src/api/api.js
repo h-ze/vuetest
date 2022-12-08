@@ -68,3 +68,12 @@ export function getPostLogs(params){
 export function getTags(params){
     return service.get('tagController/getTags',{params: params|| {}})
 }
+
+/**
+ * 删除指定的博客
+ * @param {} params 
+ * @returns 
+ */
+export function deletePost(params){
+    return service.delete('postController/deletePost',{params: params || {}})
+}

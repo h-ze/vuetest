@@ -7,6 +7,7 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import axios from 'axios'
+import store from '@/store'
 
 import { getCookie } from '@/utils/cookie.js'
 import { Notification, MessageBox, Message, Loading } from 'element-ui'
@@ -38,7 +39,10 @@ service.interceptors.response.use((res) => {
     }
 
     // 未设置状态码则默认成功状态
-    const code = res.data.code || 200;
+    const code = res.data.code ;
+    //const code = 999999 ;
+    
+    console.log('code',code)
     
     // 获取错误信息
     //const msg = errorCode[code] || res.data.msg || errorCode['default']
@@ -47,9 +51,10 @@ service.interceptors.response.use((res) => {
     if(res.request.responseType ===  'blob' || res.request.responseType ===  'arraybuffer'){
         return res.data
     }
-    
-
-    if (code === 999999 ) {
+    console.log('length',store.getters.roles.length)
+    console.log('token',!localStorage.getItem('token'))
+    if (code === 999999) {
+        console.log('log',isRelogin.show)
         if (!isRelogin.show) {
             isRelogin.show = true;
             MessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录', '系统提示', {
@@ -59,9 +64,14 @@ service.interceptors.response.use((res) => {
             }
         ).then(() => {
             isRelogin.show = false;
-            //store.dispatch('LogOut').then(() => {
-            //location.href = '/index';
-            //})
+            console.log('relogin')
+            //location.reload() // 为了重新实例化vue-router对象 避免bug
+            //location.href ='/login'
+            //this.$router.push('login')
+            store.dispatch('LogOut').then(() => {
+                console.log('length1',store.getters.roles.length)
+                location.href = '/login';
+            })
         }).catch(() => {
             isRelogin.show = false;
         });

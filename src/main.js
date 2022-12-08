@@ -18,9 +18,11 @@ import 'font-awesome/css/font-awesome.min.css'
 import axios from 'axios'
 import router from './router'
 import service from './service'
+import store from './store'
 // 自定义表格工具组件
 import RightToolbar from "@/components/RightToolbar"
 import Editor from "@/components/Editor"
+import modal from "@/plugins/modal"
 
 Vue.component('RightToolbar', RightToolbar)
 Vue.component('Editor', Editor)
@@ -28,6 +30,8 @@ Vue.component('Editor', Editor)
 
 Vue.prototype.axios = axios
 Vue.prototype.service = service
+// 模态框对象
+Vue.prototype.$modal = modal
 
 router.beforeEach((to,from,next) =>{
   if(!localStorage.getItem('token')){
@@ -43,5 +47,6 @@ Vue.config.productionTip = false
 
 new Vue({
   router,
+  store,
   render: h => h(App),
 }).$mount('#app')

@@ -316,6 +316,9 @@ export default {
             },
             // 部门树选项
             deptOptions: undefined,
+            // 岗位选项
+            postOptions: [],
+            roleOptions: [],
         }
         },
         created(){
@@ -460,6 +463,9 @@ export default {
             },
             cancel(){
                 this.open = false;
+            },
+            submitForm(){
+              
             }
     }
   }
