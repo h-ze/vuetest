@@ -2,7 +2,7 @@
  * @Author: hz hz15858@163.com
  * @Date: 2022-12-03 15:28:35
  * @LastEditors: hz hz15858@163.com
- * @LastEditTime: 2022-12-04 16:44:03
+ * @LastEditTime: 2022-12-08 20:26:18
  * @FilePath: /vuetest/src/components/post/PostList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -26,28 +26,28 @@
 
 
     <el-form :model="formInline" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px" class="demo-form-inline">
-        <el-form-item label="用户名称" prop="title">
+        <el-form-item label="用户名称" prop="authorName">
           <el-input
-            v-model="formInline.name"
+            v-model="formInline.authorName"
             placeholder="请输入用户名称"
             clearable
             style="width: 240px"
             @keyup.enter.native="onSubmit"
           />
         </el-form-item>
-        <el-form-item label="手机号码" prop="title">
+        <el-form-item label="文章标题" prop="title">
           <el-input
             v-model="formInline.title"
-            placeholder="请输入手机号码"
+            placeholder="请输入文章标题"
             clearable
             style="width: 240px"
             @keyup.enter.native="onSubmit"
           />
         </el-form-item>
-        <el-form-item label="状态" prop="title">
+        <el-form-item label="文章状态" prop="status">
           <el-select
-            v-model="formInline.title"
-            placeholder="用户状态"
+            v-model="formInline.status"
+            placeholder="请选择文章状态"
             clearable
             style="width: 240px"
           >
@@ -59,6 +59,8 @@
             /> -->
           </el-select>
         </el-form-item>
+
+
         <el-form-item label="创建时间">
           <el-date-picker
             v-model="dateRange"
@@ -74,6 +76,8 @@
           <el-button type="primary" icon="el-icon-search" size="mini" @click="onSubmit">搜索</el-button>
           <el-button icon="el-icon-refresh" size="mini" @click="onReset">重置</el-button>
         </el-form-item>
+
+        
     </el-form>
 
 
@@ -86,7 +90,7 @@
             icon="el-icon-edit"
             size="mini"
             :disabled="single"
-            @click="handleUpdate"
+            @click="topUpdate"
             >修改</el-button>
         </el-col>
         <el-col :span="1.5">
@@ -107,6 +111,8 @@
         <el-table-column type="selection" width="50" align="center" />
         <el-table-column prop="postId" label="文档Id" align="center"></el-table-column>
         <el-table-column prop="authorId" label="作者Id" align="center"></el-table-column>
+        <el-table-column prop="authorName" label="作者名" align="center"></el-table-column>
+        
         <el-table-column prop="channelId" label="地址" align="center"></el-table-column>
         <el-table-column prop="comments" label="内容" align="center"></el-table-column>
         <el-table-column prop="created" label="创建日期" align="center"></el-table-column>
@@ -124,7 +130,7 @@
             align="center"
             width="160"
             class-name="small-padding fixed-width"
-          >
+        >
             <template slot-scope="scope" v-if="scope.row.userId !== 1">
               <el-button
                 size="mini"
@@ -150,23 +156,23 @@
                 </el-dropdown-menu>
               </el-dropdown> -->
             </template>
-          </el-table-column>
+        </el-table-column>
     </el-table>
 
     <el-dialog title="修改博客信息" :visible.sync="dialogFormVisible">
         <el-form :model="form">
 
             <el-form-item label="文章标题" :label-width="formLabelWidth">
-              <el-input v-model="form.name" autocomplete="off"></el-input>
+              <el-input v-model="form.title" autocomplete="off"></el-input>
             </el-form-item>
             
 
             <el-form-item label="文章标签" :label-width="formLabelWidth">
-              <el-input v-model="form.name" autocomplete="off"></el-input>
+              <el-input v-model="form.tags" autocomplete="off"></el-input>
             </el-form-item>
 
             <el-form-item label="文章概要" :label-width="formLabelWidth">
-              <el-input v-model="form.name" autocomplete="off"></el-input>
+              <el-input v-model="form.summary" autocomplete="off"></el-input>
             </el-form-item>
 
             <!-- <el-form-item label="活动区域" :label-width="formLabelWidth">
@@ -239,11 +245,17 @@ export default {
         total:0,
         loading:true,
         formInline:{
-            name:''
+
+            authorName: '',
+            title: '',
+            status: 0,
         },
         dialogFormVisible:false,
         form:{
-            name: ''
+            title: '',
+            tags:'',
+            summary:'',
+            status: 0,
         },
         formLabelWidth: '90px',
         showSearch: true,
@@ -290,7 +302,14 @@ export default {
             })
         },
         getDataByOther(){
-            getPostListByOther({page: this.page,per_page:this.per_page,title:this.formInline.name})
+            getPostListByOther({
+              page: this.page,
+              per_page:this.per_page,
+              authorName:this.formInline.authorName,
+              status:this.formInline.status,
+              title:this.formInline.title
+
+            })
             .then(res =>{
                 this.loading = false
                 if(res.code === 100000){
@@ -327,6 +346,9 @@ export default {
             this.getDataByOther()
         },
         onReset(){
+            this.formInline.authorName ='',
+            this.formInline.status =0,
+            this.formInline.title=''
             this.getData({page: this.page,per_page:this.per_page})
         },
         updatePostMessage(){
@@ -335,6 +357,7 @@ export default {
         // 多选框选中数据
         handleSelectionChange(selection,rows) {
           this.ids = selection.map(item => item.postId);
+          this.currentData = selection.map(item => item);
           this.single = selection.length != 1;
           this.multiple = !selection.length;
 
@@ -354,8 +377,8 @@ export default {
         },
         currenthandleCurrentChange(row){
 
-          this.single = row.length != 1;
-          this.multiple = !row.length;
+          //this.single = row.length != 1;
+          //this.multiple = !row.length;
           if (row) {
             this.$refs.singleTable.clearSelection();
             //this.$refs.singleTable.setCurrentRow(row);
@@ -376,9 +399,18 @@ export default {
         },
         /** 修改按钮操作 */
         handleUpdate(row) {
+
           this.reset();
           this.getTreeselect();
           this.dialogFormVisible =true
+          
+          console.log('row1',row)    
+          console.log('ids',this.ids)   
+          console.log('item',this.currentData)       
+          this.form.summary= row.summary
+          this.form.tags =row.tags
+          this.form.title =row.title,
+          this.form.status = row.status
           // const userId = row.userId || this.ids;
           //     getUser(userId).then(response => {
           //         this.form = response.data;
@@ -391,13 +423,30 @@ export default {
           //         this.form.password = "";
           //     });
         },
+        topUpdate(row) {
+
+          this.reset();
+          this.getTreeselect();
+          this.dialogFormVisible =true
+
+          console.log('row1',row)    
+          console.log('ids',this.ids)   
+          console.log('item',this.currentData)       
+          this.form.summary= row.summary
+          this.form.tags =row.tags
+          this.form.title =row.title,
+          this.form.status = row.status
+
+        },
         /** 搜索按钮操作 */
         handleQuery() {
             this.queryParams.pageNum = 1;
             this.getList();
         },
         reset(){
-
+            this.formInline.authorName ='',
+            this.formInline.status =0,
+            this.formInline.title=''
         },
         getTreeselect (){
 

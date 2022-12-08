@@ -2,7 +2,7 @@
  * @Author: hz hz15858@163.com
  * @Date: 2022-12-03 15:28:35
  * @LastEditors: hz hz15858@163.com
- * @LastEditTime: 2022-12-06 18:59:55
+ * @LastEditTime: 2022-12-08 19:50:53
  * @FilePath: /vuetest/src/components/post/PostList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -107,9 +107,23 @@
           <el-table-column prop="image" label="图片" align="center"></el-table-column>
 
           <el-table-column label="操作" align="center">
-              <template slot-scope="scope">
+              <!-- <template slot-scope="scope">
                   <el-button type="danger" size="mini" icon="el-icon-delete" @click="del(scope.postId)"></el-button>
-              </template>
+              </template> -->
+              <template slot-scope="scope" v-if="scope.row.userId !== 1">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
+                @click="handleUpdate(scope.row)"
+              >修改</el-button>
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-delete"
+                @click="handleDelete(scope.row)"
+              >删除</el-button>
+            </template>
           </el-table-column>
       </el-table>
   
