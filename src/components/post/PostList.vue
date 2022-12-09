@@ -165,7 +165,6 @@
             <el-form-item label="文章标题" :label-width="formLabelWidth">
               <el-input v-model="form.title" autocomplete="off"></el-input>
             </el-form-item>
-            
 
             <el-form-item label="文章标签" :label-width="formLabelWidth">
               <el-input v-model="form.tags" autocomplete="off"></el-input>
@@ -174,16 +173,6 @@
             <el-form-item label="文章概要" :label-width="formLabelWidth">
               <el-input v-model="form.summary" autocomplete="off"></el-input>
             </el-form-item>
-
-            <!-- <el-form-item label="活动区域" :label-width="formLabelWidth">
-              <el-select v-model="form.region" placeholder="请选择活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-
-              
-            </el-form-item> -->
-
 
             <el-form-item label="文章状态" :label-width="formLabelWidth">
               <el-select v-model="form.status" placeholder="请选择文章对外发布的状态">
@@ -222,23 +211,6 @@ import { Alert } from 'element-ui'
 export default {
     data() {
       return {
-        // tableData: [{
-        //   date: '2016-05-02',
-        //   name: '王小虎',
-        //   address: '上海市普陀区金沙江路 1518 弄'
-        // }, {
-        //   date: '2016-05-04',
-        //   name: '王小虎',
-        //   address: '上海市普陀区金沙江路 1517 弄'
-        // }, {
-        //   date: '2016-05-01',
-        //   name: '王小虎',
-        //   address: '上海市普陀区金沙江路 1519 弄'
-        // }, {
-        //   date: '2016-05-03',
-        //   name: '王小虎',
-        //   address: '上海市普陀区金沙江路 1516 弄'
-        // }]
         tableData: [],
         page:1,
         per_page:10,
@@ -387,13 +359,20 @@ export default {
         /** 删除按钮操作 */
         handleDelete(row) {
             //const userIds = row.userId || this.ids;
+            let result=100000;
             const postId =row.postId ||   this.ids.toString();
             console.log('ROW',row)
             this.$modal.confirm('是否确认删除编号为"' + postId + '"的数据项？').then(function() {
-                return deletePost({ids:postId});
+                return deletePost({ids:postId}).then(res=>{
+                    result = res.code
+                });
             }).then(() => {
-                this.refreshData();
-                this.$modal.msgSuccess("删除成功");
+                if(result === 100000){
+                  this.refreshData();
+                  this.$modal.msgSuccess("删除成功");
+                }else{
+                  this.$modal.msgError("删除失败");
+                }
             }).catch(() => {});
         },
         /** 修改按钮操作 */
