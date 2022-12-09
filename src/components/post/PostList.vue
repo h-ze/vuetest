@@ -199,7 +199,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+            <el-button type="primary" @click="sumbitForm">确 定</el-button>
         </div>
         </el-dialog>
 
@@ -216,7 +216,7 @@
 </template>
 
 <script>
-import { postList,getPostListByOther,deletePost }  from '@/api/api'
+import { postList,getPostListByOther,deletePost,updatePost }  from '@/api/api'
 import { del } from 'vue'
 import { Alert } from 'element-ui'
 export default {
@@ -283,7 +283,8 @@ export default {
             label:4,
             value:4
           }
-        ]
+        ],
+        currentData: []
       }
     },
     created(){
@@ -346,9 +347,7 @@ export default {
             this.getDataByOther()
         },
         onReset(){
-            this.formInline.authorName ='',
-            this.formInline.status =0,
-            this.formInline.title=''
+            this.reset()
             this.getData({page: this.page,per_page:this.per_page})
         },
         updatePostMessage(){
@@ -393,7 +392,7 @@ export default {
             this.$modal.confirm('是否确认删除编号为"' + postId + '"的数据项？').then(function() {
                 return deletePost({ids:postId});
             }).then(() => {
-                this.getData({page: this.page,per_page:this.per_page});
+                this.refreshData();
                 this.$modal.msgSuccess("删除成功");
             }).catch(() => {});
         },
@@ -406,7 +405,8 @@ export default {
           
           console.log('row1',row)    
           console.log('ids',this.ids)   
-          console.log('item',this.currentData)       
+          console.log('item',this.currentData)
+          this.form.postId = row.postId       
           this.form.summary= row.summary
           this.form.tags =row.tags
           this.form.title =row.title,
@@ -422,21 +422,35 @@ export default {
           //         this.title = "修改用户";
           //         this.form.password = "";
           //     });
+
+          
         },
         topUpdate(row) {
-
           this.reset();
           this.getTreeselect();
           this.dialogFormVisible =true
+          const updateItem = this.currentData[0]  
+          this.form.summary= updateItem.summary
+          this.form.tags =updateItem.tags
+          this.form.title =updateItem.title,
+          this.form.status = updateItem.status
 
-          console.log('row1',row)    
-          console.log('ids',this.ids)   
-          console.log('item',this.currentData)       
-          this.form.summary= row.summary
-          this.form.tags =row.tags
-          this.form.title =row.title,
-          this.form.status = row.status
-
+        },
+        sumbitForm(){
+          updatePost(this.form).then(response =>{
+            console.log("response",response)
+            this.dialogFormVisible =false
+            if(response.code === 100000){
+                this.total = response.data.totalSize
+                this.tableData =response.data.data
+                this.refreshData();
+            }else{
+                this.$message({message: response.message,type : 'error'})
+            }
+          }).catch(err =>{
+              this.dialogFormVisible =true
+              console.error(err)
+          })
         },
         /** 搜索按钮操作 */
         handleQuery() {
@@ -447,10 +461,17 @@ export default {
             this.formInline.authorName ='',
             this.formInline.status =0,
             this.formInline.title=''
+            this.form.summary= ''
+            this.form.tags = ''
+            this.form.title = '',
+            this.form.status = 0
         },
         getTreeselect (){
 
         },
+        refreshData(){
+          this.getData({page: this.page,per_page:this.per_page});
+        }
     },
         
   }

@@ -77,3 +77,15 @@ export function getTags(params){
 export function deletePost(params){
     return service.delete('postController/deletePost',{params: params || {}})
 }
+
+export function updatePost(data){
+    //return service.put('postController/updatePost',);
+    return service({
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+         },
+        method:'put',
+        url: 'postController/updatePost',
+        data
+    })
+}
