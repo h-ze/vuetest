@@ -64,12 +64,12 @@ service.interceptors.response.use((res) => {
             }
         ).then(() => {
             isRelogin.show = false;
-            console.log('relogin')
+            //console.log('relogin')
             //location.reload() // 为了重新实例化vue-router对象 避免bug
             //location.href ='/login'
             //this.$router.push('login')
             store.dispatch('LogOut').then(() => {
-                console.log('length1',store.getters.roles.length)
+                //console.log('length1',store.getters.roles.length)
                 location.href = '/login';
             })
         }).catch(() => {
