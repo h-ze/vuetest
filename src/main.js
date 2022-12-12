@@ -24,9 +24,16 @@ import RightToolbar from "@/components/RightToolbar"
 import Editor from "@/components/Editor"
 import modal from "@/plugins/modal"
 
+// 字典标签组件
+//import DictTag from '@/components/DictTag'
+// 字典数据组件
+//import DictData from '@/components/DictData'
+
 Vue.component('RightToolbar', RightToolbar)
 Vue.component('Editor', Editor)
 
+//Vue.component('DictTag', DictTag)
+//DictData.install()
 
 Vue.prototype.axios = axios
 Vue.prototype.service = service

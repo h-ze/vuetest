@@ -51,12 +51,12 @@
             clearable
             style="width: 240px"
           >
-            <!-- <el-option
-              v-for="dict in dict.type.sys_normal_disable"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            /> -->
+          <el-option
+              v-for="dict in dicts"
+              :key="dict.labelName"
+              :label="dict.labelValue"
+              :value="dict.labelName"
+            ></el-option>
           </el-select>
         </el-form-item>
 
@@ -118,7 +118,11 @@
         <el-table-column prop="created" label="创建日期" align="center"></el-table-column>
         <el-table-column prop="favors" label="喜爱" align="center"></el-table-column>
         <el-table-column prop="featured" label="特色" align="center"></el-table-column>
-        <el-table-column prop="status" label="状态" align="center"></el-table-column>
+        <el-table-column prop="status" label="状态" align="center" :formatter="getStatus">
+          <!-- <template slot-scope="scope">
+           {{getStatus(scope.row.status)}}
+          </template> -->
+        </el-table-column>
         <el-table-column prop="summary" label="概要" align="center"></el-table-column>
         <el-table-column prop="tags" label="标签" align="center"></el-table-column>
         <!-- <el-table-column prop="thumbnail" label="略图" align="center"></el-table-column> -->
@@ -178,9 +182,9 @@
               <el-select v-model="form.status" placeholder="请选择文章对外发布的状态">
                 <el-option
                   v-for="dict in dicts"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
+                  :key="dict.labelName"
+                  :label="dict.labelValue"
+                  :value="dict.labelName"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -205,11 +209,13 @@
 </template>
 
 <script>
-import { postList,getPostListByOther,deletePost,updatePost }  from '@/api/api'
+import { postList,getPostListByOther,deletePost,updatePost,getPostLabel }  from '@/api/api'
 import { getCookie } from '@/utils/cookie'
 import { del } from 'vue'
 import { Alert } from 'element-ui'
 export default {
+
+    dicts: ['sys_job_group'],
     data() {
       return {
         tableData: [],
@@ -241,28 +247,29 @@ export default {
         single: true,
         ids: [],
         dicts:[
-          {
-            label: '状态1',
-            value: 1
-          },
-          {
-            label:2,
-            value:2
-          },
-          {
-            label:3,
-            value:3
-          },
-          {
-            label:4,
-            value:4
-          }
+          // {
+          //   label: '状态1',
+          //   value: 1
+          // },
+          // {
+          //   label:2,
+          //   value:2
+          // },
+          // {
+          //   label:3,
+          //   value:3
+          // },
+          // {
+          //   label:4,
+          //   value:4
+          // }
         ],
         currentData: []
       }
     },
     created(){
         this.getData({page: this.page,per_page:this.per_page})
+        this.getLabel()
     },
     methods:{
         getData(params){
@@ -270,7 +277,7 @@ export default {
             getPostListByOther({
               page: this.page,
               per_page:this.per_page,
-              authorId:getCookie("userId"),
+              authorId:getCookie('userId'),
 
             })
             .then(res =>{
@@ -462,7 +469,34 @@ export default {
         },
         refreshData(){
           this.getData({page: this.page,per_page:this.per_page});
-        }
+        },
+        getLabel(){
+          getPostLabel({
+            label: '1'
+          })
+          .then(res =>{
+                this.loading = false
+                console.log('label',res)
+                if(res.code === 100000){
+                    //this.total = res.data.totalSize
+                    this.dicts =res.data
+                    //loading = false
+                }
+          })
+        },
+        getStatus(row, column){
+          console.log('id',row.status)
+          const selectedName = this.dicts.find((item)=>{
+            console.log('ie',item)
+            return item.labelName === row.status;
+            //筛选出匹配数据，是对应数据的整个对象
+          });
+          if(selectedName){
+            console.log('status',selectedName.labelValue)
+            return selectedName.labelValue
+          }
+      
+        },
     },
         
   }

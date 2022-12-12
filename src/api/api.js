@@ -89,3 +89,7 @@ export function updatePost(data){
         data
     })
 }
+
+export function getPostLabel(params){
+    return service.get('label/getLabel',{params: params|| {}})
+}
