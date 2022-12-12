@@ -2,7 +2,7 @@
  * @Author: hz hz15858@163.com
  * @Date: 2022-12-02 19:38:24
  * @LastEditors: hz hz15858@163.com
- * @LastEditTime: 2022-12-05 21:36:47
+ * @LastEditTime: 2022-12-09 21:52:42
  * @FilePath: /vuetest/src/components/Login.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -79,9 +79,10 @@ export default {
 
                         if(res.code === 100000){
                             console.log('login',res)
-                            setCookie('token',res.data)
+                            console.log('token',res.data.token)
+                            setCookie('token',res.data.token)
                             //setCookie('token','')
-
+                            setCookie('userId',res.data.userId)
                             setCookie('username',this.form.username)
 
                             this.$message({message: res.message,type : 'success'})

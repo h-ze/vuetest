@@ -2,7 +2,7 @@
  * @Author: hz hz15858@163.com
  * @Date: 2022-12-03 15:28:35
  * @LastEditors: hz hz15858@163.com
- * @LastEditTime: 2022-12-08 20:26:18
+ * @LastEditTime: 2022-12-10 16:07:19
  * @FilePath: /vuetest/src/components/post/PostList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -206,6 +206,7 @@
 
 <script>
 import { postList,getPostListByOther,deletePost,updatePost }  from '@/api/api'
+import { getCookie } from '@/utils/cookie'
 import { del } from 'vue'
 import { Alert } from 'element-ui'
 export default {
@@ -224,6 +225,7 @@ export default {
         },
         dialogFormVisible:false,
         form:{
+            postId: '',
             title: '',
             tags:'',
             summary:'',
@@ -240,8 +242,8 @@ export default {
         ids: [],
         dicts:[
           {
-            label:1,
-            value:1
+            label: '状态1',
+            value: 1
           },
           {
             label:2,
@@ -264,7 +266,13 @@ export default {
     },
     methods:{
         getData(params){
-            postList(params)
+            //postList(params)
+            getPostListByOther({
+              page: this.page,
+              per_page:this.per_page,
+              authorId:getCookie("userId"),
+
+            })
             .then(res =>{
                 this.loading = false
                 if(res.code === 100000){
@@ -413,6 +421,7 @@ export default {
           this.form.tags =updateItem.tags
           this.form.title =updateItem.title,
           this.form.status = updateItem.status
+          this.form.postId = updateItem.postId
 
         },
         sumbitForm(){
@@ -420,6 +429,8 @@ export default {
             console.log("response",response)
             this.dialogFormVisible =false
             if(response.code === 100000){
+                this.$modal.msgSuccess("修改成功");
+
                 this.total = response.data.totalSize
                 this.tableData =response.data.data
                 this.refreshData();
@@ -444,6 +455,7 @@ export default {
             this.form.tags = ''
             this.form.title = '',
             this.form.status = 0
+            this.form.postId =''
         },
         getTreeselect (){
 
