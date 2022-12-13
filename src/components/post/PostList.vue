@@ -227,7 +227,6 @@ export default {
 
             authorName: '',
             title: '',
-            status: 0,
         },
         dialogFormVisible:false,
         form:{
@@ -295,8 +294,9 @@ export default {
               per_page:this.per_page,
               authorName:this.formInline.authorName,
               status:this.formInline.status,
-              title:this.formInline.title
-
+              title:this.formInline.title,
+              startTime: this.dateRange[0],
+              endTime: this.dateRange[1]
             })
             .then(res =>{
                 this.loading = false
@@ -331,6 +331,8 @@ export default {
             
         },
         onSubmit(){
+          
+            console.log('data',this.dateRange)
             this.getDataByOther()
         },
         onReset(){
@@ -463,6 +465,7 @@ export default {
             this.form.title = '',
             this.form.status = 0
             this.form.postId =''
+            this.dateRange= []
         },
         getTreeselect (){
 
