@@ -2,7 +2,7 @@
  * @Author: hz hz15858@163.com
  * @Date: 2022-12-03 15:28:29
  * @LastEditors: hz hz15858@163.com
- * @LastEditTime: 2022-12-03 16:08:15
+ * @LastEditTime: 2022-12-14 21:58:26
  * @FilePath: /vuetest/src/components/post/PublishPost.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -11,15 +11,23 @@
       <el-form ref="form" :model="form" label-width="80px">
         
           <el-form-item label="标题" >
-            <el-input v-model="form.title"></el-input>
+            <el-input v-model="form.title" placeholder="请输入文章标题"></el-input>
           </el-form-item>
 
           <el-form-item label="文章标签">
-            <el-input v-model="form.tags"></el-input>
+            <el-select v-model="form.tags" placeholder="请选择文章标签">
+              <el-option
+                v-for="tag in tags"
+                :key="tag.name"
+                :label="tag.name"
+                :value="tag.name"
+              ></el-option>
+            </el-select>
+            <!-- <el-input v-model="form.tags"></el-input> -->
           </el-form-item>
 
           <el-form-item label="文章概要">
-            <el-input v-model="form.summary"></el-input>
+            <el-input v-model="form.summary" placeholder="请输入文章概要"></el-input>
           </el-form-item>
 
           <el-form-item label="文章状态">
@@ -98,7 +106,7 @@
 
 <script>
 // import Editor from '@/components/Editor'
-import { addPost,getPostLabel }  from '@/api/api'
+import { addPost,getPostLabel,getTags }  from '@/api/api'
 import { getCookie } from '../../utils/cookie';
 export default {
   data() {
@@ -111,21 +119,23 @@ export default {
           featured: 0,
           id: 0,
           postId: 0,
-          status: 0,
-          summary: "vue",
+          status: '',
+          summary: '',
           tagId: 0,
-          tags: "vue",
-          thumbnail: "vue",
-          title: "",
+          tags: '',
+          thumbnail: '',
+          title: '',
           views: 0,
           weight: 0
         },
         content: '',
-        dicts:[]
+        dicts:[],
+        tags:[]
       }
     },
     created(){
       this.getLabel()
+      this.getTags({})
     },
     methods: {
       onSubmit(form) {
@@ -154,7 +164,7 @@ export default {
             label: '1'
           })
           .then(res =>{
-                this.loading = false
+                //this.loading = false
                 console.log('label2',res)
                 if(res.code === 100000){
                     //this.total = res.data.totalSize
@@ -162,6 +172,15 @@ export default {
                     //loading = false
                 }
           })
+      },
+      getTags(params){
+        getTags(params)
+              .then(res =>{
+                  //this.loading = false
+                  if(res.code === 100000){
+                      this.tags =res.data
+                  }
+              })
       },
       getStatus(row, column){
           console.log('id',row.status)
