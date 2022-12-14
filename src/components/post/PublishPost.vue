@@ -14,12 +14,31 @@
             <el-input v-model="form.title"></el-input>
           </el-form-item>
 
+          <el-form-item label="文章标签">
+            <el-input v-model="form.tags"></el-input>
+          </el-form-item>
 
+          <el-form-item label="文章概要">
+            <el-input v-model="form.summary"></el-input>
+          </el-form-item>
+
+          <el-form-item label="文章状态">
+            <el-select v-model="form.status" placeholder="请选择文章对外发布的状态">
+              <el-option
+                v-for="dict in dicts"
+                :key="dict.labelName"
+                :label="dict.labelValue"
+                :value="dict.labelName"
+              ></el-option>
+            </el-select>
+          </el-form-item>
           
 
           <el-form-item label="内容" >
-            <Editor/>
+            <Editor ref="editor"/>
           </el-form-item>
+
+          
 
           <!-- <el-form-item label="标签">
             <el-input v-model="form.name"></el-input>
@@ -79,7 +98,7 @@
 
 <script>
 // import Editor from '@/components/Editor'
-import { addPost }  from '@/api/api'
+import { addPost,getPostLabel }  from '@/api/api'
 import { getCookie } from '../../utils/cookie';
 export default {
   data() {
@@ -97,18 +116,23 @@ export default {
           tagId: 0,
           tags: "vue",
           thumbnail: "vue",
-          title: "vue",
+          title: "",
           views: 0,
           weight: 0
-        }
+        },
+        content: '',
+        dicts:[]
       }
+    },
+    created(){
+      this.getLabel()
     },
     methods: {
       onSubmit(form) {
         console.log('submit!');
         console.log('form',this.form)
-        
         console.log("form",this.form);
+        console.log('content',this.$refs.editor.currentValue)
         addPost(this.form).then(res =>{
 
             if(res.code === 100000){
@@ -124,6 +148,34 @@ export default {
                     
                 
       },
+
+      getLabel(){
+          getPostLabel({
+            label: '1'
+          })
+          .then(res =>{
+                this.loading = false
+                console.log('label2',res)
+                if(res.code === 100000){
+                    //this.total = res.data.totalSize
+                    this.dicts =res.data
+                    //loading = false
+                }
+          })
+      },
+      getStatus(row, column){
+          console.log('id',row.status)
+          const selectedName = this.dicts.find((item)=>{
+            console.log('ie',item)
+            return item.labelName === row.status;
+            //筛选出匹配数据，是对应数据的整个对象
+          });
+          if(selectedName){
+            console.log('status',selectedName.labelValue)
+            return selectedName.labelValue
+          }
+      
+        },
       
     }
     // components:{
