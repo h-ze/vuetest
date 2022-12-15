@@ -8,13 +8,13 @@
 -->
 <template>
   <div class="publishPost">
-      <el-form ref="form" :model="form" label-width="80px">
+      <el-form ref="form" :model="form" label-width="80px" :rules="rules">
         
-          <el-form-item label="标题" >
+          <el-form-item label="标题" prop="title">
             <el-input v-model="form.title" placeholder="请输入文章标题"></el-input>
           </el-form-item>
 
-          <el-form-item label="文章标签">
+          <el-form-item label="文章标签" >
             <el-select v-model="form.tags" placeholder="请选择文章标签">
               <el-option
                 v-for="tag in tags"
@@ -26,78 +26,29 @@
             <!-- <el-input v-model="form.tags"></el-input> -->
           </el-form-item>
 
-          <el-form-item label="文章概要">
+          <el-form-item label="文章概要" prop="summary">
             <el-input v-model="form.summary" placeholder="请输入文章概要"></el-input>
           </el-form-item>
 
           <el-form-item label="文章状态">
             <el-select v-model="form.status" placeholder="请选择文章对外发布的状态">
               <el-option
-                v-for="dict in dicts"
-                :key="dict.labelName"
-                :label="dict.labelValue"
-                :value="dict.labelName"
+                v-for="status in docStatus"
+                :key="status.labelName"
+                :label="status.labelValue"
+                :value="status.labelName"
               ></el-option>
             </el-select>
           </el-form-item>
-          
 
-          <el-form-item label="内容" >
+          <el-form-item label="内容" prop="rulercontent">
             <Editor ref="editor"/>
           </el-form-item>
 
-          
-
-          <!-- <el-form-item label="标签">
-            <el-input v-model="form.name"></el-input>
-          </el-form-item> -->
-
-          <!-- <el-form-item label="标签">
-            <el-select v-model="form.region" placeholder="请选择活动区域">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
-          </el-form-item>
-
-          <el-form-item label="分类">
-            <el-select v-model="form.region1" placeholder="请选择活动区域">
-              <el-option label="test1" value="test1"></el-option>
-              <el-option label="test2" value="test2"></el-option>
-            </el-select>
-          </el-form-item> -->
-          <!-- <el-form-item label="活动时间">
-            <el-col :span="11">
-              <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
-            </el-col>
-            <el-col class="line" :span="2">-</el-col>
-            <el-col :span="11">
-              <el-time-picker placeholder="选择时间" v-model="form.date2" style="width: 100%;"></el-time-picker>
-            </el-col>
-          </el-form-item> -->
-          <!-- <el-form-item label="即时配送">
-            <el-switch v-model="form.delivery"></el-switch>
-          </el-form-item>
-          <el-form-item label="活动性质">
-            <el-checkbox-group v-model="form.type">
-              <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>
-              <el-checkbox label="地推活动" name="type"></el-checkbox>
-              <el-checkbox label="线下主题活动" name="type"></el-checkbox>
-              <el-checkbox label="单纯品牌曝光" name="type"></el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-          <el-form-item label="特殊资源">
-            <el-radio-group v-model="form.resource">
-              <el-radio label="线上品牌商赞助"></el-radio>
-              <el-radio label="线下场地免费"></el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="活动形式">
-            <el-input type="textarea" v-model="form.desc"></el-input>
-          </el-form-item> -->
           <el-form-item>
-            <el-button type="primary" @click="onSubmit('form')">立即创建</el-button>
+            <el-button type="primary" @click="onSubmit('form')" >立即创建</el-button>
             <el-button type="primary" @click="onSubmit">定时发布</el-button>
-            <el-button>取消</el-button>
+            <el-button @click="resetForm">重置</el-button>
           </el-form-item>
         </el-form>
       
@@ -108,6 +59,7 @@
 // import Editor from '@/components/Editor'
 import { addPost,getPostLabel,getTags }  from '@/api/api'
 import { getCookie } from '../../utils/cookie';
+import { summaryRule, titleRule,contentRule } from '@/utils/vaildate.js' 
 export default {
   data() {
       return {
@@ -126,11 +78,17 @@ export default {
           thumbnail: '',
           title: '',
           views: 0,
-          weight: 0
+          weight: 0,
+          content: ''
         },
         content: '',
-        dicts:[],
-        tags:[]
+        docStatus:[],
+        tags:[],
+        rules:{
+            title: [{validator: titleRule,trigger: 'blur'}],
+            summary: [{validator: summaryRule,trigger: 'blur'}],
+            rulercontent:[{validator:contentRule,trigger: 'blur'}]
+        }
       }
     },
     created(){
@@ -139,26 +97,30 @@ export default {
     },
     methods: {
       onSubmit(form) {
-        console.log('submit!');
-        console.log('form',this.form)
-        console.log("form",this.form);
-        console.log('content',this.$refs.editor.currentValue)
-        addPost(this.form).then(res =>{
+          this.$refs[form].validate((valid) => {
+              if(valid){
+                  console.log('submit!');
+                  console.log('form',this.form)
+                  console.log("form",this.form);
+                  console.log('content',this.$refs.editor.currentValue)
+                  this.form.content = this.$refs.editor.currentValue
+                  console.log('form1',this.form)
 
-            if(res.code === 100000){
-                console.log('onSubmit',res)
-
-            }else{
-                this.$message({message: res.data,type : 'error'})
-            }
-            
-        }).catch(err =>{
-            console.error(err)
-        })
-                    
-                
+                  addPost(this.form).then(res =>{
+                      if(res.code === 100000){
+                          console.log('onSubmit',res)
+                          this.$modal.msgSuccess("发表成功");
+                          this.resetForm()
+                      }else{
+                          this.$message({message: res.data,type : 'error'})
+                      }
+                      
+                  }).catch(err =>{
+                      console.error(err)
+                  })
+              }
+          })
       },
-
       getLabel(){
           getPostLabel({
             label: '1'
@@ -168,7 +130,9 @@ export default {
                 console.log('label2',res)
                 if(res.code === 100000){
                     //this.total = res.data.totalSize
-                    this.dicts =res.data
+                    this.docStatus =res.data
+
+                    this.form.status = res.data[0].labelName 
                     //loading = false
                 }
           })
@@ -179,6 +143,7 @@ export default {
                   //this.loading = false
                   if(res.code === 100000){
                       this.tags =res.data
+                      this.form.tags = res.data[0].name 
                   }
               })
       },
@@ -193,8 +158,30 @@ export default {
             console.log('status',selectedName.labelValue)
             return selectedName.labelValue
           }
-      
-        },
+      },
+      resetForm(){
+
+        this.form.status = this.docStatus[0].labelName,
+        this.form.authorId= 0,
+        this.form.channelId= 0,
+        this.form.comments= 0,
+        this.form.favors= 0,
+        this.form.featured= 0,
+        this.form.id= 0,
+        this.form.postId= 0,
+        this.form.summary= '',
+        this.form.tagId= 0,
+        this.form.tags= this.tags[0].name,
+        this.form.thumbnail= '',
+        this.form.title= '',
+        this.form.views= 0,
+        this.form.weight= 0,
+        this.form.content= '',
+        this.content= ''
+
+      }
+
+      
       
     }
     // components:{

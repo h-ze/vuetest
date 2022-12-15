@@ -32,6 +32,30 @@ export function passRule(rule,value,callback) {
     // }
 }
 
+export function titleRule(rule,value,callback){
+    if(value === ''){
+        callback(new Error('请输入标题'))
+    } else{
+        callback()
+    }
+}
+
+export function summaryRule(rule,value,callback){
+  if(value === ''){
+      callback(new Error('请输入摘要'))
+  } else{
+      callback()
+  }
+}
+
+export function contentRule(rule,value,callback){
+  if(value === ''){
+      callback(new Error('请输入内容'))
+  } else{
+      callback()
+  }
+}
+
 /**
  * @param {string} path
  * @returns {Boolean}

@@ -58,9 +58,15 @@ export default new Router({
                 },
                 {
                     path: '/home/PostTab',
-                    name: '文章Tab列表',
+                    name: 'Tag列表',
                     iconClass: 'fa fa-empire',
                     component: () => import('@/components/post/PostTab')
+                },
+                {
+                    path: '/home/PostLabel',
+                    name: 'Label列表',
+                    iconClass: 'fa fa-empire',
+                    component: () => import('@/components/post/PostLabel')
                 },
                 // {
                 //     path: '/home/Editor',

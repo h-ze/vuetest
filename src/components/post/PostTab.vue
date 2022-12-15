@@ -94,7 +94,7 @@
           <!-- <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns" class="righttoolbar"></right-toolbar>     -->
       </el-row>
 
-      <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+      <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange" @current-change="currenthandleCurrentChange" ref="singleTable">
             <el-table-column type="selection" width="50" align="center" />
       <!-- <el-table :data="tableData" v-loading= "loading" border style="width: 100%">
           <el-table-column
@@ -128,6 +128,29 @@
       </el-table>
   
       
+
+      <el-dialog title="添加Tag" :visible.sync="dialogFormVisible">
+        <el-form :model="form">
+
+            <el-form-item label="Tag名" :label-width="formLabelWidth">
+              <el-input v-model="form.name" autocomplete="off"></el-input>
+            </el-form-item>
+
+            <el-form-item label="Tag介绍" :label-width="formLabelWidth">
+              <el-input v-model="form.introduction" autocomplete="off"></el-input>
+            </el-form-item>
+
+            <el-form-item label="图片" :label-width="formLabelWidth">
+                <el-input v-model="form.image" autocomplete="off"></el-input>
+            </el-form-item>
+            
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="sumbitForm">确 定</el-button>
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+
+        </div>
+    </el-dialog>
   
       <el-pagination
           @size-change="handleSizeChange"
@@ -142,7 +165,7 @@
 </template>
 
 <script>
-import { getTags}  from '@/api/api'
+import { getTags,addTags,updateTags,deleteTags}  from '@/api/api'
 import { del } from 'vue'
 import { Alert } from 'element-ui'
 export default {
@@ -158,7 +181,9 @@ export default {
           },
           dialogFormVisible:false,
           form:{
-              name: ''
+              name: '',
+              introduction: '',
+              image: ''
           },
           formLabelWidth: '120px',
           showSearch: true,
@@ -257,19 +282,18 @@ export default {
           /** 新增按钮操作 */
           handleAdd() {
               this.reset();
-              this.getTreeselect();
-              getUser().then(response => {
-                  this.postOptions = response.posts;
-                  this.roleOptions = response.roles;
-                  this.open = true;
-                  this.title = "添加用户";
-                  this.form.password = this.initPassword;
-              });
+              this.dialogFormVisible = true
+            //   getUser().then(response => {
+            //       this.postOptions = response.posts;
+            //       this.roleOptions = response.roles;
+            //       this.open = true;
+            //       this.title = "添加用户";
+            //       this.form.password = this.initPassword;
+            //   });
           },
           /** 修改按钮操作 */
           handleUpdate(row) {
               this.reset();
-              this.getTreeselect();
               const userId = row.userId || this.ids;
               getUser(userId).then(response => {
                   this.form = response.data;
@@ -297,11 +321,36 @@ export default {
           reset() {
           
           },
+       
+
           // 多选框选中数据
-          handleSelectionChange(selection) {
-            this.single = selection.length != 1;
-            this.multiple = !selection.length;
-          },
+            handleSelectionChange(selection,rows) {
+                this.ids = selection.map(item => item.postId);
+                this.currentData = selection.map(item => item);
+                this.single = selection.length != 1;
+                this.multiple = !selection.length;
+
+                selection.map(item => {
+                    console.log('item',item.postId)
+                    //this.$refs.singleTable.setCurrentRow(item);
+
+                })
+
+                if (rows && row.length > 0) {
+                    rows.forEach(row => {
+                    console.log('row',item.postId)
+
+                    this.$refs.singleTable.toggleRowSelection(row);
+                    });
+                }
+            },
+            currenthandleCurrentChange(row){
+
+                if (row) {
+                    this.$refs.singleTable.clearSelection();
+                    this.$refs.singleTable.toggleRowSelection(row);
+                }
+            },
     }
   }
 </script>

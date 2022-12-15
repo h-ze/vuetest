@@ -69,6 +69,18 @@ export function getTags(params){
     return service.get('tagController/getTags',{params: params|| {}})
 }
 
+export function addTags(data){
+    return service.post('tagController/addTag',data)
+}
+
+export function updateTags(params){
+    return service.get('tagController/getTags',{params: params|| {}})
+}
+
+export function deleteTags(params){
+    return service.delete('tagController/getTags',{params: params|| {}})
+}
+
 /**
  * 删除指定的博客
  * @param {} params 

@@ -26,7 +26,7 @@
 
 
     <el-form :model="formInline" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px" class="demo-form-inline">
-        <el-form-item label="用户名称" prop="authorName">
+        <!-- <el-form-item label="用户名称" prop="authorName">
           <el-input
             v-model="formInline.authorName"
             placeholder="请输入用户名称"
@@ -34,7 +34,8 @@
             style="width: 240px"
             @keyup.enter.native="onSubmit"
           />
-        </el-form-item>
+        </el-form-item> -->
+
         <el-form-item label="文章标题" prop="title">
           <el-input
             v-model="formInline.title"
@@ -83,6 +84,17 @@
 
 
     <el-row :gutter="10" class="mb8" style="">
+
+        <el-col :span="1.5">
+            <el-button
+            type="success"
+            plain
+            icon="el-icon-edit"
+            size="mini"
+            :disabled="single"
+            @click="toShowContent"
+            >查看内容</el-button>
+        </el-col>
         <el-col :span="1.5">
             <el-button
             type="success"
@@ -110,11 +122,14 @@
     <!-- <el-table :data="tableData" v-loading= "loading" border style="width: 100%"> -->
         <el-table-column type="selection" width="50" align="center" />
         <el-table-column prop="postId" label="文档Id" align="center"></el-table-column>
-        <el-table-column prop="authorId" label="作者Id" align="center"></el-table-column>
+        <!-- <el-table-column prop="authorId" label="作者Id" align="center"></el-table-column> -->
         <el-table-column prop="authorName" label="作者名" align="center"></el-table-column>
         
         <el-table-column prop="channelId" label="地址" align="center"></el-table-column>
-        <el-table-column prop="comments" label="内容" align="center"></el-table-column>
+
+        <!-- <el-table-column prop="content" label="内容" align="center"></el-table-column> -->
+        
+        <el-table-column prop="comments" label="评论数" align="center"></el-table-column>
         <el-table-column prop="created" label="创建日期" align="center"></el-table-column>
         <el-table-column prop="favors" label="喜爱" align="center"></el-table-column>
         <el-table-column prop="featured" label="特色" align="center"></el-table-column>
@@ -136,6 +151,14 @@
             class-name="small-padding fixed-width"
         >
             <template slot-scope="scope" v-if="scope.row.userId !== 1">
+
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
+                @click="handContent(scope.row)"
+              >查看内容</el-button>
+
               <el-button
                 size="mini"
                 type="text"
@@ -171,7 +194,15 @@
             </el-form-item>
 
             <el-form-item label="文章标签" :label-width="formLabelWidth">
-              <el-input v-model="form.tags" autocomplete="off"></el-input>
+              <!-- <el-input v-model="form.tags" autocomplete="off"></el-input> -->
+              <el-select v-model="form.tags" placeholder="请选择文章对外发布的标签">
+                <el-option
+                  v-for="tag in tags"
+                  :key="tag.name"
+                  :label="tag.name"
+                  :value="tag.name"
+              ></el-option>
+              </el-select>
             </el-form-item>
 
             <el-form-item label="文章概要" :label-width="formLabelWidth">
@@ -194,7 +225,25 @@
             <el-button @click="dialogFormVisible = false">取 消</el-button>
             <el-button type="primary" @click="sumbitForm">确 定</el-button>
         </div>
-        </el-dialog>
+    </el-dialog>
+
+
+    <el-dialog title="文档内容" :visible.sync="dialogContentVisible" width="40%">
+        <!-- <el-form :model="form">
+          <el-form-item label="" :label-width="formLabelWidth">
+            <el-input v-model="form.content" autocomplete="off"></el-input>
+          </el-form-item>
+          
+        </el-form> -->
+
+        <template >
+          <div class="showContent" v-html='form.content'></div>
+        </template>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogContentVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dialogContentVisible = false">确 定</el-button>
+        </div>
+    </el-dialog>
 
     <el-pagination
       @size-change="handleSizeChange"
@@ -209,7 +258,7 @@
 </template>
 
 <script>
-import { postList,getPostListByOther,deletePost,updatePost,getPostLabel }  from '@/api/api'
+import { getPostListByOther,deletePost,updatePost,getPostLabel,getTags }  from '@/api/api'
 import { getCookie } from '@/utils/cookie'
 import { del } from 'vue'
 import { Alert } from 'element-ui'
@@ -224,7 +273,6 @@ export default {
         total:0,
         loading:true,
         formInline:{
-
             authorName: '',
             title: '',
         },
@@ -245,30 +293,16 @@ export default {
         // 非单个禁用
         single: true,
         ids: [],
-        dicts:[
-          // {
-          //   label: '状态1',
-          //   value: 1
-          // },
-          // {
-          //   label:2,
-          //   value:2
-          // },
-          // {
-          //   label:3,
-          //   value:3
-          // },
-          // {
-          //   label:4,
-          //   value:4
-          // }
-        ],
-        currentData: []
+        dicts:[],
+        currentData: [],
+        tags:[],
+        dialogContentVisible: false
       }
     },
     created(){
         this.getData({page: this.page,per_page:this.per_page})
         this.getLabel()
+        this.getTags({})
     },
     methods:{
         getData(params){
@@ -277,7 +311,6 @@ export default {
               page: this.page,
               per_page:this.per_page,
               authorId:getCookie('userId'),
-
             })
             .then(res =>{
                 this.loading = false
@@ -331,7 +364,6 @@ export default {
             
         },
         onSubmit(){
-          
             console.log('data',this.dateRange)
             this.getDataByOther()
         },
@@ -407,19 +439,6 @@ export default {
           this.form.tags =row.tags
           this.form.title =row.title,
           this.form.status = row.status
-          // const userId = row.userId || this.ids;
-          //     getUser(userId).then(response => {
-          //         this.form = response.data;
-          //         this.postOptions = response.posts;
-          //         this.roleOptions = response.roles;
-          //         this.form.postIds = response.postIds;
-          //         this.form.roleIds = response.roleIds;
-          //         this.open = true;
-          //         this.title = "修改用户";
-          //         this.form.password = "";
-          //     });
-
-          
         },
         topUpdate(row) {
           this.reset();
@@ -432,6 +451,33 @@ export default {
           this.form.status = updateItem.status
           this.form.postId = updateItem.postId
 
+        },
+
+        handContent(row){
+          this.reset();
+          this.getTreeselect();
+          this.dialogContentVisible =true
+          
+          console.log('ids',this.ids)   
+          console.log('item',this.currentData)
+          this.form.postId = row.postId       
+          this.form.summary= row.summary
+          this.form.tags =row.tags
+          this.form.title =row.title,
+          this.form.status = row.status
+          this.form.content = row.content
+        },
+        toShowContent(row){
+          this.reset();
+          this.getTreeselect();
+          this.dialogContentVisible =true
+          const updateItem = this.currentData[0]  
+          this.form.summary= updateItem.summary
+          this.form.tags =updateItem.tags
+          this.form.title =updateItem.title,
+          this.form.status = updateItem.status
+          this.form.postId = updateItem.postId
+          this.form.content = updateItem.content
         },
         sumbitForm(){
           updatePost(this.form).then(response =>{
@@ -488,18 +534,27 @@ export default {
           })
         },
         getStatus(row, column){
-          console.log('id',row.status)
-          const selectedName = this.dicts.find((item)=>{
-            console.log('ie',item)
-            return item.labelName === row.status;
-            //筛选出匹配数据，是对应数据的整个对象
-          });
-          if(selectedName){
-            console.log('status',selectedName.labelValue)
-            return selectedName.labelValue
-          }
-      
+            console.log('id',row.status)
+            const selectedName = this.dicts.find((item)=>{
+              console.log('ie',item)
+              return item.labelName === row.status;
+              //筛选出匹配数据，是对应数据的整个对象
+            });
+            if(selectedName){
+              console.log('status',selectedName.labelValue)
+              return selectedName.labelValue
+            }
         },
+
+        getTags(params){
+            getTags(params)
+                .then(res =>{
+                    //this.loading = false
+                    if(res.code === 100000){
+                        this.tags =res.data
+                    }
+            })
+      },
     },
         
   }
@@ -518,5 +573,9 @@ export default {
         width: 500px;
         text-align: left;
     }
+
+.showContent{
+  border:1px solid gray;
+}
 }
 </style>
