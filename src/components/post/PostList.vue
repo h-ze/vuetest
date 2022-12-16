@@ -397,17 +397,13 @@ export default {
         },
         currenthandleCurrentChange(row){
 
-          //this.single = row.length != 1;
-          //this.multiple = !row.length;
           if (row) {
             this.$refs.singleTable.clearSelection();
-            //this.$refs.singleTable.setCurrentRow(row);
             this.$refs.singleTable.toggleRowSelection(row);
           }
         },
         /** 删除按钮操作 */
         handleDelete(row) {
-            //const userIds = row.userId || this.ids;
             let result=100000;
             const postId =row.postId ||   this.ids.toString();
             console.log('ROW',row)
