@@ -59,7 +59,7 @@
               <!-- <template slot-scope="scope">
                   <el-button type="danger" size="mini" icon="el-icon-delete" @click="del(scope.postId)"></el-button>
               </template> -->
-              <template slot-scope="scope" v-if="scope.row.userId !== 1">
+              <template slot-scope="scope" v-if="scope.row.labelId !== 1">
               <el-button
                 size="mini"
                 type="text"
@@ -81,16 +81,16 @@
       <el-dialog :title="tagTitle" :visible.sync="dialogFormVisible">
         <el-form :model="form">
 
-            <el-form-item label="Tag名" :label-width="formLabelWidth">
-              <el-input v-model="form.name" autocomplete="off"></el-input>
+            <el-form-item label="Label名" :label-width="formLabelWidth">
+              <el-input v-model="form.labelName" autocomplete="off"></el-input>
             </el-form-item>
 
-            <el-form-item label="Tag介绍" :label-width="formLabelWidth">
-              <el-input v-model="form.introduction" autocomplete="off"></el-input>
+            <el-form-item label="Label值" :label-width="formLabelWidth">
+              <el-input v-model="form.labelValue" autocomplete="off"></el-input>
             </el-form-item>
 
-            <el-form-item label="图片" :label-width="formLabelWidth">
-                <el-input v-model="form.image" autocomplete="off"></el-input>
+            <el-form-item label="类型" :label-width="formLabelWidth">
+                <el-input v-model="form.labelType" autocomplete="off"></el-input>
             </el-form-item>
             
         </el-form>
@@ -114,7 +114,7 @@
 </template>
 
 <script>
-import { addTags,updateTags,deleteTags,getPostLabel,getPostLabels}  from '@/api/api'
+import { deletePostLabel,updatePostLabel,addPostLabel,getPostLabel,getPostLabels}  from '@/api/api'
 import { del } from 'vue'
 import { Alert } from 'element-ui'
 export default {
@@ -129,13 +129,13 @@ export default {
               name:''
           },
           dialogFormVisible:false,
-          tagMethod:0,
+          labelMethod:0,
           tagTitle: "",
           form:{
-              tagId:'',
-              name: '',
-              introduction: '',
-              image: ''
+              labelId:'',
+              labelName: '',
+              labelValue: '',
+              labelType: ''
           },
           formLabelWidth: '120px',
           showSearch: true,
@@ -225,13 +225,13 @@ export default {
         },
         updatePostMessage(){
             this.dialogFormVisible =true
-            this.tagMethod = 1
+            this.labelMethod = 1
         },
         /** 删除按钮操作 */
         handleDelete(row) {
-            const tagId = row.tagId || this.ids.toString();
-            this.$modal.confirm('是否确认删除用户编号为"' + tagId + '"的数据项？').then(function() {
-                return deleteTags({tagId}).then(res =>{
+            const labelId = row.labelId || this.ids.toString();
+            this.$modal.confirm('是否确认删除用户编号为"' + labelId + '"的数据项？').then(function() {
+                return deletePostLabel({labelId}).then(res =>{
                     console.log("删除tag：",res.data)
                 });
             }).then(() => {
@@ -243,8 +243,8 @@ export default {
         handleAdd() {
             this.reset();
             this.dialogFormVisible = true
-            this.tagTitle = "新建Tag"
-            this.tagMethod = 0
+            this.tagTitle = "新建Label"
+            this.labelMethod = 0
             //   getUser().then(response => {
             //       this.postOptions = response.posts;
             //       this.roleOptions = response.roles;
@@ -256,33 +256,24 @@ export default {
         /** 修改按钮操作 */
         handleUpdate(row) {
             console.log(row)
-            this.tagTitle = "修改Tag"
-            this.tagMethod = 1
-            this.form.name=row.name,
-            this.form.introduction =row.introduction,
-            this.form.image =row.image
-            this.form.tagId = row.tagId
+            this.tagTitle = "修改Label"
+            this.labelMethod = 1
+            this.form.labelName=row.labelName,
+            this.form.labelValue =row.labelValue,
+            this.form.labelType =row.labelType
+            this.form.labelId = row.labelId
             this.dialogFormVisible = true
         },
 
-        delTag(tagId){
-            deleteTags(tagId).then(res =>{
-                console.log("删除tag：",res.data)
-            })
-        },
-
-
-
-
         topUpdate(row) {
             console.log(row)
-            this.tagTitle = "修改Tag"
-            this.tagMethod = 1
+            this.tagTitle = "修改Label"
+            this.labelMethod = 1
             const updateItem = this.currentData[0]  
-            this.form.name=updateItem.name,
-            this.form.introduction =updateItem.introduction,
-            this.form.image =updateItem.image
-            this.form.tagId = updateItem.tagId
+            this.form.labelName=updateItem.labelName,
+            this.form.labelValue =updateItem.labelValue,
+            this.form.labelType =updateItem.labelType
+            this.form.labelId = updateItem.labelId
             this.dialogFormVisible = true
         },
 
@@ -299,23 +290,24 @@ export default {
         },
         // 表单重置
         reset() {
-            this.form.name='',
-            this.form.introduction ='',
-            this.form.image =''
+            this.form.labelName='',
+            this.form.labelValue ='',
+            this.form.labelType ='',
+            this.form.labelId =''
         },
 
         sumbitForm(){
             //debugger
-            console.log(this.tagMethod)
-            if(this.tagMethod == 0){
-                addTags(this.form).then(res =>{
+            console.log(this.labelMethod)
+            if(this.labelMethod == 0){
+                addPostLabel(this.form).then(res =>{
                     console.log(res.data)
                     this.dialogFormVisible = false
                     this.reset();
                     this.getData({})
                 })
             }else{
-                updateTags(this.form).then(res =>{
+                updatePostLabel(this.form).then(res =>{
                     console.log("updateTag:",res.data)
                     this.dialogFormVisible = false
                     this.reset();

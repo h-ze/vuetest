@@ -110,10 +110,30 @@ export function updatePost(data){
     })
 }
 
+
 export function getPostLabel(params){
     return service.get('label/getLabel',{params: params|| {}})
 }
 
 export function getPostLabels(params){
     return service.get('label/getLabels',{params: params|| {}})
+}
+
+export function addPostLabel(data){
+    return service.post('label/addLabel',data)
+}
+
+export function updatePostLabel(data){
+    return service({
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+         },
+        method:'put',
+        url: 'label/updateLabel',
+        data
+    })
+}
+
+export function deletePostLabel(params){
+    return service.delete('label/deleteLabel',{params: params||{}})
 }
