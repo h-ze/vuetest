@@ -73,12 +73,20 @@ export function addTags(data){
     return service.post('tagController/addTag',data)
 }
 
-export function updateTags(params){
-    return service.get('tagController/getTags',{params: params|| {}})
+export function updateTags(data){
+    //return service.putForm('tagController/updateTag',{params: params|| {}})
+    return service({
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+         },
+        method:'put',
+        url: 'tagController/updateTag',
+        data
+    })
 }
 
 export function deleteTags(params){
-    return service.delete('tagController/getTags',{params: params|| {}})
+    return service.delete('tagController/deleteTag',{params: params|| {}})
 }
 
 /**
@@ -104,4 +112,8 @@ export function updatePost(data){
 
 export function getPostLabel(params){
     return service.get('label/getLabel',{params: params|| {}})
+}
+
+export function getPostLabels(params){
+    return service.get('label/getLabels',{params: params|| {}})
 }
