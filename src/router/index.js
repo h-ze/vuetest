@@ -2,7 +2,7 @@
  * @Author: hz hz15858@163.com
  * @Date: 2022-12-02 19:15:20
  * @LastEditors: hz hz15858@163.com
- * @LastEditTime: 2022-12-07 21:19:56
+ * @LastEditTime: 2022-12-28 20:29:29
  * @FilePath: /vuetest/src/router/index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -136,7 +136,7 @@ export default new Router({
 
         {
             path: '/home/setting',
-            name: '设置',
+            name: '设置中心',
             iconClass: 'fa fa-list',
             redirect: '/home',
             component: resolve => require(['@/components/Home'], resolve ),
@@ -154,16 +154,19 @@ export default new Router({
 
 
         {
-            path: '/user',
-            component: Layout,
-            hidden: true,
-            redirect: 'noredirect',
+            path: '/home/user',
+            //component: Layout,
+            //hidden: true,
+            name: '个人中心',
+            iconClass: 'fa fa-list',
+            redirect: '/home',
+            component: resolve => require(['@/components/Home'], resolve ),
             children: [
               {
-                path: 'profile',
-                component: () => import('@/components/system/user/profile'),
-                name: 'Profile',
-                meta: { title: '个人中心', icon: 'user' }
+                path: '/home/user/profile',
+                component: () => import('@/components/system/user/index'),
+                name: '个人信息',
+                //meta: { title: '个人中心', icon: 'user' }
               }
             ]
         },
