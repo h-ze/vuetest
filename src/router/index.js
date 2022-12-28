@@ -152,6 +152,22 @@ export default new Router({
             
         },
 
+
+        {
+            path: '/user',
+            component: Layout,
+            hidden: true,
+            redirect: 'noredirect',
+            children: [
+              {
+                path: 'profile',
+                component: () => import('@/components/system/user/profile'),
+                name: 'Profile',
+                meta: { title: '个人中心', icon: 'user' }
+              }
+            ]
+        },
+
     ],
     mode: 'history'
 })

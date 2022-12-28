@@ -319,7 +319,7 @@ export default {
 
         // 多选框选中数据
         handleSelectionChange(selection,rows) {
-            this.ids = selection.map(item => item.tagId);
+            this.ids = selection.map(item => item.labelId);
             this.currentData = selection.map(item => item);
             this.single = selection.length != 1;
             this.multiple = !selection.length;
