@@ -11,6 +11,10 @@ import App from './App.vue'
 //全局引用
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+
+import './assets/styles/element-variables.scss'
+import '@/assets/styles/index.scss' // global css
+import '@/assets/styles/blog.scss' // 自定义 css
 Vue.use(ElementUI)
 
 import 'font-awesome/css/font-awesome.min.css'

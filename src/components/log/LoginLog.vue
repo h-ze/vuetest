@@ -61,7 +61,7 @@
         </el-form>
         
         <el-row :gutter="10" class="mb8" style="">
-            <el-col :span="1.5">
+            <!-- <el-col :span="1.5">
                 <el-button
                 type="primary"
                 plain
@@ -79,7 +79,7 @@
                 :disabled="single"
                 @click="handleUpdate"
                 >修改</el-button>
-            </el-col>
+            </el-col> -->
             <el-col :span="1.5">
                 <el-button
                 type="danger"
@@ -111,7 +111,7 @@
             <!-- <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns" class="righttoolbar"></right-toolbar>     -->
         </el-row>
 
-        <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+        <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange" @current-change="currenthandleCurrentChange" ref="singleTable">
             <el-table-column type="selection" width="50" align="center" />
         <!-- <el-table :data="tableData" v-loading= "loading" border style="width: 100%"> -->
             <!-- <el-table-column
@@ -130,7 +130,7 @@
 
             <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
-                    <el-button type="danger" size="mini" icon="el-icon-delete" @click="del(scope.postId)"></el-button>
+                    <el-button type="danger" size="mini" icon="el-icon-delete" @click="del(scope.logId)"></el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -277,34 +277,7 @@
                     this.$modal.msgSuccess("删除成功");
                 }).catch(() => {});
             },
-            /** 新增按钮操作 */
-            handleAdd() {
-                this.reset();
-                this.getTreeselect();
-                getUser().then(response => {
-                    this.postOptions = response.posts;
-                    this.roleOptions = response.roles;
-                    this.open = true;
-                    this.title = "添加用户";
-                    this.form.password = this.initPassword;
-                });
-            },
-            /** 修改按钮操作 */
-            handleUpdate(row) {
-                this.reset();
-                this.getTreeselect();
-                const userId = row.userId || this.ids;
-                getUser(userId).then(response => {
-                    this.form = response.data;
-                    this.postOptions = response.posts;
-                    this.roleOptions = response.roles;
-                    this.form.postIds = response.postIds;
-                    this.form.roleIds = response.roleIds;
-                    this.open = true;
-                    this.title = "修改用户";
-                    this.form.password = "";
-                });
-            },
+            
             /** 导出按钮操作 */
             handleExport() {
                 this.download('system/user/export', {
@@ -320,11 +293,28 @@
             reset() {
             
             },
-             // 多选框选中数据
-            handleSelectionChange(selection) {
-                this.ids = selection.map(item => item.userId);
+             
+
+            // 多选框选中数据
+            handleSelectionChange(selection,rows) {
+                this.ids = selection.map(item => item.logId);
+                this.currentData = selection.map(item => item);
                 this.single = selection.length != 1;
                 this.multiple = !selection.length;
+
+                if (rows && row.length > 0) {
+                    rows.forEach(row => {
+
+                    this.$refs.singleTable.toggleRowSelection(row);
+                    });
+                }
+            },
+            currenthandleCurrentChange(row){
+
+                if (row) {
+                    this.$refs.singleTable.clearSelection();
+                    this.$refs.singleTable.toggleRowSelection(row);
+                }
             },
       }
     }

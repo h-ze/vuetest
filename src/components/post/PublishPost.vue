@@ -57,7 +57,7 @@
 
 <script>
 // import Editor from '@/components/Editor'
-import { addPost,getPostLabel,getTags }  from '@/api/api'
+import { addPost,getPostOptionsStatus,getTags }  from '@/api/api'
 import { getCookie } from '../../utils/cookie';
 import { summaryRule, titleRule,contentRule } from '@/utils/vaildate.js' 
 export default {
@@ -92,7 +92,7 @@ export default {
       }
     },
     created(){
-      this.getLabel()
+      this.getStatus()
       this.getTags({})
     },
     methods: {
@@ -121,9 +121,9 @@ export default {
               }
           })
       },
-      getLabel(){
-          getPostLabel({
-            label: '1'
+      getStatus(){
+          getPostOptionsStatus({
+            status: '1'
           })
           .then(res =>{
                 //this.loading = false

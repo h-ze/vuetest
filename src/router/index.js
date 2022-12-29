@@ -57,16 +57,16 @@ export default new Router({
                     component: () => import('@/components/post/PublishPost')
                 },
                 {
-                    path: '/home/PostTab',
+                    path: '/home/PostTag',
                     name: 'Tag列表',
                     iconClass: 'fa fa-empire',
-                    component: () => import('@/components/post/PostTab')
+                    component: () => import('@/components/post/PostTag')
                 },
                 {
-                    path: '/home/PostLabel',
+                    path: '/home/PostStatus',
                     name: 'Label列表',
                     iconClass: 'fa fa-empire',
-                    component: () => import('@/components/post/PostLabel')
+                    component: () => import('@/components/post/PostStatus')
                 },
                 // {
                 //     path: '/home/Editor',

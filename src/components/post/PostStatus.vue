@@ -7,7 +7,7 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-  <div class="postLabel">
+  <div class="postStatus">
       
       <el-row :gutter="10" class="mb8" style="">
           <el-col :span="1.5">
@@ -50,16 +50,16 @@
               type="selection"
               width="55">
           </el-table-column> -->
-          <el-table-column prop="labelId" label="label号" align="center"></el-table-column>
-          <el-table-column prop="labelName" label="名称" align="center"></el-table-column>
-          <el-table-column prop="labelValue" label="值" align="center"></el-table-column>
-          <el-table-column prop="labelType" label="类型" align="center"></el-table-column>
+          <el-table-column prop="statusId" label="status号" align="center"></el-table-column>
+          <el-table-column prop="statusName" label="名称" align="center"></el-table-column>
+          <el-table-column prop="statusValue" label="值" align="center"></el-table-column>
+          <el-table-column prop="statusType" label="类型" align="center"></el-table-column>
 
           <el-table-column label="操作" align="center">
               <!-- <template slot-scope="scope">
                   <el-button type="danger" size="mini" icon="el-icon-delete" @click="del(scope.postId)"></el-button>
               </template> -->
-              <template slot-scope="scope" v-if="scope.row.labelId !== 1">
+              <template slot-scope="scope" v-if="scope.row.statusId !== 1">
               <el-button
                 size="mini"
                 type="text"
@@ -81,16 +81,16 @@
       <el-dialog :title="tagTitle" :visible.sync="dialogFormVisible">
         <el-form :model="form">
 
-            <el-form-item label="Label名" :label-width="formLabelWidth">
-              <el-input v-model="form.labelName" autocomplete="off"></el-input>
+            <el-form-item label="Status名" :label-width="formStatusWidth">
+              <el-input v-model="form.statusName" autocomplete="off"></el-input>
             </el-form-item>
 
-            <el-form-item label="Label值" :label-width="formLabelWidth">
-              <el-input v-model="form.labelValue" autocomplete="off"></el-input>
+            <el-form-item label="Status值" :label-width="formStatusWidth">
+              <el-input v-model="form.statusValue" autocomplete="off"></el-input>
             </el-form-item>
 
-            <el-form-item label="类型" :label-width="formLabelWidth">
-                <el-input v-model="form.labelType" autocomplete="off"></el-input>
+            <el-form-item label="类型" :label-width="formStatusWidth">
+                <el-input v-model="form.statusType" autocomplete="off"></el-input>
             </el-form-item>
             
         </el-form>
@@ -114,7 +114,7 @@
 </template>
 
 <script>
-import { deletePostLabel,updatePostLabel,addPostLabel,getPostLabel,getPostLabels}  from '@/api/api'
+import { deletePostStatus,updatePostStatus,addPostStatus,getPostOptionsStatus,getPostStatus}  from '@/api/api'
 import { del } from 'vue'
 import { Alert } from 'element-ui'
 export default {
@@ -129,15 +129,15 @@ export default {
               name:''
           },
           dialogFormVisible:false,
-          labelMethod:0,
+          statusMethod:0,
           tagTitle: "",
           form:{
-              labelId:'',
-              labelName: '',
-              labelValue: '',
-              labelType: ''
+              statusId:'',
+              statusName: '',
+              statusValue: '',
+              statusType: ''
           },
-          formLabelWidth: '120px',
+          formStatusWidth: '120px',
           showSearch: true,
           // 非多个禁用
           multiple: true,
@@ -157,7 +157,7 @@ export default {
     },
     methods:{
         getData(params){
-            getPostLabels(params)
+            getPostStatus(params)
             .then(res =>{
                 this.loading = false
                 if(res.code === 100000){
@@ -225,13 +225,13 @@ export default {
         },
         updatePostMessage(){
             this.dialogFormVisible =true
-            this.labelMethod = 1
+            this.statusMethod = 1
         },
         /** 删除按钮操作 */
         handleDelete(row) {
-            const labelId = row.labelId || this.ids.toString();
-            this.$modal.confirm('是否确认删除用户编号为"' + labelId + '"的数据项？').then(function() {
-                return deletePostLabel({labelId}).then(res =>{
+            const statusId = row.statusId || this.ids.toString();
+            this.$modal.confirm('是否确认删除用户编号为"' + statusId + '"的数据项？').then(function() {
+                return deletePostStatus({statusId}).then(res =>{
                     console.log("删除tag：",res.data)
                 });
             }).then(() => {
@@ -243,8 +243,8 @@ export default {
         handleAdd() {
             this.reset();
             this.dialogFormVisible = true
-            this.tagTitle = "新建Label"
-            this.labelMethod = 0
+            this.tagTitle = "新建Status"
+            this.statusMethod = 0
             //   getUser().then(response => {
             //       this.postOptions = response.posts;
             //       this.roleOptions = response.roles;
@@ -256,24 +256,24 @@ export default {
         /** 修改按钮操作 */
         handleUpdate(row) {
             console.log(row)
-            this.tagTitle = "修改Label"
-            this.labelMethod = 1
-            this.form.labelName=row.labelName,
-            this.form.labelValue =row.labelValue,
-            this.form.labelType =row.labelType
-            this.form.labelId = row.labelId
+            this.tagTitle = "修改Status"
+            this.statusMethod = 1
+            this.form.statusName=row.statusName,
+            this.form.statusValue =row.statusValue,
+            this.form.statusType =row.statusType
+            this.form.statusId = row.statusId
             this.dialogFormVisible = true
         },
 
         topUpdate(row) {
             console.log(row)
-            this.tagTitle = "修改Label"
-            this.labelMethod = 1
+            this.tagTitle = "修改Status"
+            this.statusMethod = 1
             const updateItem = this.currentData[0]  
-            this.form.labelName=updateItem.labelName,
-            this.form.labelValue =updateItem.labelValue,
-            this.form.labelType =updateItem.labelType
-            this.form.labelId = updateItem.labelId
+            this.form.statusName=updateItem.statusName,
+            this.form.statusValue =updateItem.statusValue,
+            this.form.statusType =updateItem.statusType
+            this.form.statusId = updateItem.statusId
             this.dialogFormVisible = true
         },
 
@@ -290,24 +290,24 @@ export default {
         },
         // 表单重置
         reset() {
-            this.form.labelName='',
-            this.form.labelValue ='',
-            this.form.labelType ='',
-            this.form.labelId =''
+            this.form.statusName='',
+            this.form.statusValue ='',
+            this.form.statusType ='',
+            this.form.statusId =''
         },
 
         sumbitForm(){
             //debugger
-            console.log(this.labelMethod)
-            if(this.labelMethod == 0){
-                addPostLabel(this.form).then(res =>{
+            console.log(this.statusMethod)
+            if(this.statusMethod == 0){
+                addPostStatus(this.form).then(res =>{
                     console.log(res.data)
                     this.dialogFormVisible = false
                     this.reset();
                     this.getData({})
                 })
             }else{
-                updatePostLabel(this.form).then(res =>{
+                updatePostStatus(this.form).then(res =>{
                     console.log("updateTag:",res.data)
                     this.dialogFormVisible = false
                     this.reset();
@@ -319,7 +319,7 @@ export default {
 
         // 多选框选中数据
         handleSelectionChange(selection,rows) {
-            this.ids = selection.map(item => item.labelId);
+            this.ids = selection.map(item => item.statusId);
             this.currentData = selection.map(item => item);
             this.single = selection.length != 1;
             this.multiple = !selection.length;
@@ -350,7 +350,7 @@ export default {
 </script>
 
 <style lang="scss">
-.postLabel{
+.postStatus{
     .el-pagination{
         text-align: left;
         margin-top: 20px;

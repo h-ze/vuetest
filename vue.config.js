@@ -27,6 +27,13 @@ module.exports = defineConfig({
       }
     }
   },
+  css: {
+    loaderOptions: {
+      sass: {
+        sassOptions: { outputStyle: "expanded" }
+      }
+    }
+  },
   chainWebpack(config) {
 
     // set svg-sprite-loader

@@ -54,9 +54,9 @@
           >
           <el-option
               v-for="dict in dicts"
-              :key="dict.labelName"
-              :label="dict.labelValue"
-              :value="dict.labelName"
+              :key="dict.statusName"
+              :label="dict.statusValue"
+              :value="dict.statusName"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -213,9 +213,9 @@
               <el-select v-model="form.status" placeholder="请选择文章对外发布的状态">
                 <el-option
                   v-for="dict in dicts"
-                  :key="dict.labelName"
-                  :label="dict.labelValue"
-                  :value="dict.labelName"
+                  :key="dict.statusName"
+                  :label="dict.statusValue"
+                  :value="dict.statusName"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -258,7 +258,7 @@
 </template>
 
 <script>
-import { getPostListByOther,deletePost,updatePost,getPostLabel,getTags }  from '@/api/api'
+import { getPostListByOther,deletePost,updatePost,getPostOptionsStatus,getTags }  from '@/api/api'
 import { getCookie } from '@/utils/cookie'
 import { del } from 'vue'
 import { Alert } from 'element-ui'
@@ -301,7 +301,7 @@ export default {
     },
     created(){
         this.getData({page: this.page,per_page:this.per_page})
-        this.getLabel()
+        this.getPostOptionsStatus()
         this.getTags({})
     },
     methods:{
@@ -515,13 +515,13 @@ export default {
         refreshData(){
           this.getData({page: this.page,per_page:this.per_page});
         },
-        getLabel(){
-          getPostLabel({
-            label: '1'
+        getPostOptionsStatus(){
+          getPostOptionsStatus({
+            status: '1'
           })
           .then(res =>{
                 this.loading = false
-                console.log('label',res)
+                console.log('status',res)
                 if(res.code === 100000){
                     //this.total = res.data.totalSize
                     this.dicts =res.data
@@ -533,12 +533,12 @@ export default {
             console.log('id',row.status)
             const selectedName = this.dicts.find((item)=>{
               console.log('ie',item)
-              return item.labelName === row.status;
+              return item.statusName === row.status;
               //筛选出匹配数据，是对应数据的整个对象
             });
             if(selectedName){
-              console.log('status',selectedName.labelValue)
-              return selectedName.labelValue
+              console.log('status',selectedName.statusValue)
+              return selectedName.statusValue
             }
         },
 

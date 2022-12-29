@@ -8,116 +8,55 @@
 -->
 <template>
   <div class="app-container home">
-    <el-row :gutter="20">
-      <el-col :sm="24" :lg="24">
-        <blockquote class="text-warning" style="font-size: 14px">
-          领取阿里云通用云产品1888优惠券
-          <br />
-          <el-link
-            href="https://www.aliyun.com/minisite/goods?userCode=brki8iof"
-            type="primary"
-            target="_blank"
-            >https://www.aliyun.com/minisite/goods?userCode=brki8iof</el-link
-          >
-          <br />
-          领取腾讯云通用云产品2860优惠券
-          <br />
-          <el-link
-            href="https://cloud.tencent.com/redirect.php?redirect=1025&cps_key=198c8df2ed259157187173bc7f4f32fd&from=console"
-            type="primary"
-            target="_blank"
-            >https://cloud.tencent.com/redirect.php?redirect=1025&cps_key=198c8df2ed259157187173bc7f4f32fd&from=console</el-link
-          >
-          <br />
-          阿里云服务器折扣区
-          <el-link href="http://aly.ruoyi.vip" type="primary" target="_blank"
-            >>☛☛点我进入☚☚</el-link
-          >
-          &nbsp;&nbsp;&nbsp; 腾讯云服务器秒杀区
-          <el-link href="http://txy.ruoyi.vip" type="primary" target="_blank"
-            >>☛☛点我进入☚☚</el-link
-          ><br />
-          <h4 class="text-danger">
-            云产品通用红包，可叠加官网常规优惠使用。(仅限新用户)
-          </h4>
-        </blockquote>
 
-        <hr />
-      </el-col>
-    </el-row>
     <el-row :gutter="20">
-      <el-col :sm="24" :lg="12" style="padding-left: 20px">
-        <h2>若依后台管理框架</h2>
-        <p>
-          一直想做一款后台管理系统，看了很多优秀的开源项目但是发现没有合适自己的。于是利用空闲休息时间开始自己写一套后台系统。如此有了若依管理系统，她可以用于所有的Web应用程序，如网站管理后台，网站会员中心，CMS，CRM，OA等等，当然，您也可以对她进行深度定制，以做出更强系统。所有前端后台代码封装过后十分精简易上手，出错概率低。同时支持移动客户端访问。系统会陆续更新一些实用功能。
-        </p>
-        <p>
-          <b>当前版本:</b> <span>v{{ version }}</span>
-        </p>
-        <p>
-          <el-tag type="danger">&yen;免费开源</el-tag>
-        </p>
-        <p>
-          <el-button
-            type="primary"
-            size="mini"
-            icon="el-icon-cloudy"
-            plain
-            @click="goTarget('https://gitee.com/y_project/RuoYi-Cloud')"
-            >访问码云</el-button
-          >
-          <el-button
-            size="mini"
-            icon="el-icon-s-home"
-            plain
-            @click="goTarget('http://ruoyi.vip')"
-            >访问主页</el-button
-          >
-        </p>
-      </el-col>
 
-      <el-col :sm="24" :lg="12" style="padding-left: 50px">
-        <el-row>
-          <el-col :span="12">
-            <h2>技术选型</h2>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="6">
-            <h4>后端技术</h4>
-            <ul>
-              <li>SpringBoot</li>
-              <li>SpringCloud</li>
-              <li>Nacos</li>
-              <li>Sentinel</li>
-              <li>Seata</li>
-              <li>Minio</li>
-              <li>...</li>
-            </ul>
-          </el-col>
-          <el-col :span="6">
-            <h4>前端技术</h4>
-            <ul>
-              <li>Vue</li>
-              <li>Vuex</li>
-              <li>Element-ui</li>
-              <li>Axios</li>
-              <li>Echarts</li>
-              <li>Quill</li>
-              <li>...</li>
-            </ul>
-          </el-col>
-        </el-row>
-      </el-col>
+        <el-col :sm="24" :lg="24" style="padding-left: 20px">
+          <blockquote class="text-warning" style="font-size: 14px;">
+              <el-descriptions  title="文档信息">
+                <el-descriptions-item label="所有文档数目" >{{this.postNum.totalCount}}</el-descriptions-item>
+                <el-descriptions-item label="暂停数目">10</el-descriptions-item>
+                <el-descriptions-item label="点赞数">18100000000</el-descriptions-item>
+                <el-descriptions-item label="评论数">100</el-descriptions-item>
+                <el-descriptions-item label="阅读量">100</el-descriptions-item>
+              </el-descriptions>
+          </blockquote>
+          <hr />
+        </el-col>
+
     </el-row>
+
+
+    <el-row :gutter="20">
+
+    <el-col :sm="24" :lg="24" style="padding-left: 20px">
+      <blockquote class="text-warning1" style="font-size: 14px;">
+          <el-descriptions  title="数据监控">
+            <el-descriptions-item label="数据信息1">100</el-descriptions-item>
+            <el-descriptions-item label="数据信息2">10</el-descriptions-item>
+            <el-descriptions-item label="数据信息3">18100000000</el-descriptions-item>
+            <el-descriptions-item label="数据信息4">苏州市</el-descriptions-item>
+            <el-descriptions-item label="数据信息5">苏州市</el-descriptions-item>
+            <el-descriptions-item label="备注">
+              <el-tag size="small">学校</el-tag>
+            </el-descriptions-item>
+            <el-descriptions-item label="联系地址">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
+          </el-descriptions>
+      </blockquote>
+    </el-col>
+
+    </el-row>
+
+
     <el-divider />
+    
     <el-row :gutter="20">
       <el-col :xs="24" :sm="24" :md="12" :lg="8">
         <el-card class="update-log">
           <div slot="header" class="clearfix">
             <span>联系信息</span>
           </div>
-          <div class="body">
+          <!-- <div class="body">
             <p>
               <i class="el-icon-s-promotion"></i> 官网：<el-link
                 href="http://www.ruoyi.vip"
@@ -145,7 +84,7 @@
                 >/ *若依</a
               >
             </p>
-          </div>
+          </div> -->
         </el-card>
       </el-col>
       <el-col :xs="24" :sm="24" :md="12" :lg="8">
@@ -153,7 +92,7 @@
           <div slot="header" class="clearfix">
             <span>更新日志</span>
           </div>
-          <el-collapse accordion>
+          <!-- <el-collapse accordion>
             <el-collapse-item title="v3.5.0 - 2022-04-11">
               <ol>
                 <li>开启TopNav没有子菜单情况隐藏侧边栏</li>
@@ -694,7 +633,7 @@
                 <li>若依微服务系统正式发布</li>
               </ol>
             </el-collapse-item>
-          </el-collapse>
+          </el-collapse> -->
         </el-card>
       </el-col>
       <el-col :xs="24" :sm="24" :md="12" :lg="8">
@@ -702,7 +641,7 @@
           <div slot="header" class="clearfix">
             <span>捐赠支持</span>
           </div>
-          <div class="body">
+          <!-- <div class="body">
             <img
               src="https://oscimg.oschina.net/oscnet/up-d6695f82666e5018f715c41cb7ee60d3b73.png"
               alt="donate"
@@ -711,26 +650,49 @@
             <span style="display: inline-block; height: 30px; line-height: 30px"
               >你可以请作者喝杯咖啡表示鼓励</span
             >
-          </div>
+          </div> -->
         </el-card>
       </el-col>
     </el-row>
   </div>
 </template>
 
+
 <script>
+import {getPostNum} from '@/api/api.js'
 export default {
   name: "Index",
   data() {
     return {
       // 版本号
       version: "3.5.0",
+      postNum:{
+
+      }
     };
+  },
+
+  created(){
+    this.getPOSTNum({})
   },
   methods: {
     goTarget(href) {
       window.open(href, "_blank");
     },
+
+    handleDetails(){
+
+    },
+
+    getPOSTNum(params){
+      getPostNum({params})
+      .then(res =>{
+          if(res.code === 100000){
+            console.log('数量',res.data)
+            this.postNum = res.data;
+          }
+      })
+    }
   },
 };
 </script>
@@ -795,6 +757,22 @@ export default {
       margin-inline-end: 0;
       padding-inline-start: 40px;
     }
+  }
+}
+
+.item-container {
+  border-radius: 10px;
+  box-shadow: 0 0 10px #0600011a;
+  padding: 20px 30px;
+  margin-bottom: 30px;
+  min-height: 300px;         //设置最小高度
+}
+
+.text-warning1{
+  .el-descriptions-item{
+    font-size: 20;
+    text-align: center;
+    color: #2c3e50;
   }
 }
 </style>

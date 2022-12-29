@@ -111,29 +111,33 @@ export function updatePost(data){
 }
 
 
-export function getPostLabel(params){
-    return service.get('label/getLabel',{params: params|| {}})
+export function getPostOptionsStatus(params){
+    return service.get('status/getOptionsStatus',{params: params|| {}})
 }
 
-export function getPostLabels(params){
-    return service.get('label/getLabels',{params: params|| {}})
+export function getPostStatus(params){
+    return service.get('status/getStatus',{params: params|| {}})
 }
 
-export function addPostLabel(data){
-    return service.post('label/addLabel',data)
+export function addPostStatus(data){
+    return service.post('status/addStatus',data)
 }
 
-export function updatePostLabel(data){
+export function updatePostStatus(data){
     return service({
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
          },
         method:'put',
-        url: 'label/updateLabel',
+        url: 'status/updateStatus',
         data
     })
 }
 
-export function deletePostLabel(params){
-    return service.delete('label/deleteLabel',{params: params||{}})
+export function deletePostStatus(params){
+    return service.delete('status/deleteStatus',{params: params||{}})
+}
+
+export function getPostNum(params){
+    return service.get('/postController/getPostNum',{params: params || {}})
 }

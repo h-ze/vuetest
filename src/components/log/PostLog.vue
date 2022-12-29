@@ -61,7 +61,7 @@
       </el-form>
       
       <el-row :gutter="10" class="mb8" style="">
-          <el-col :span="1.5">
+          <!-- <el-col :span="1.5">
               <el-button
               type="primary"
               plain
@@ -79,7 +79,7 @@
               :disabled="single"
               @click="handleUpdate"
               >修改</el-button>
-          </el-col>
+          </el-col> -->
           <el-col :span="1.5">
               <el-button
               type="danger"
@@ -111,7 +111,7 @@
           <!-- <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns" class="righttoolbar"></right-toolbar>     -->
       </el-row>
 
-      <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+      <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange" @current-change="currenthandleCurrentChange" ref="singleTable">
             <el-table-column type="selection" width="50" align="center" />
       <!-- <el-table :data="tableData" v-loading= "loading" border style="width: 100%">
           <el-table-column
@@ -450,10 +450,25 @@ export default {
             
             },
            // 多选框选中数据
-            handleSelectionChange(selection) {
-                this.ids = selection.map(item => item.userId);
+           handleSelectionChange(selection,rows) {
+                this.ids = selection.map(item => item.logId);
+                this.currentData = selection.map(item => item);
                 this.single = selection.length != 1;
                 this.multiple = !selection.length;
+
+                if (rows && row.length > 0) {
+                    rows.forEach(row => {
+
+                    this.$refs.singleTable.toggleRowSelection(row);
+                    });
+                }
+            },
+            currenthandleCurrentChange(row){
+
+                if (row) {
+                    this.$refs.singleTable.clearSelection();
+                    this.$refs.singleTable.toggleRowSelection(row);
+                }
             },
             /** 查询部门下拉树结构 */
             getTreeselect() {
