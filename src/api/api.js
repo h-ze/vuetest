@@ -23,6 +23,10 @@ export function addPost(data){
     return service.post('postController/addPost',data)
 }
 
+export function addPostOnTiming(data){
+    return service.post('postController/addPostOnTiming',data)
+}
+
 export function postList(param){
     return service.get('postController/getPosts',{params: param || {}})
     // return service({

@@ -64,7 +64,7 @@ export default new Router({
                 },
                 {
                     path: '/home/PostStatus',
-                    name: 'Label列表',
+                    name: 'Status列表',
                     iconClass: 'fa fa-empire',
                     component: () => import('@/components/post/PostStatus')
                 },

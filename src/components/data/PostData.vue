@@ -666,9 +666,7 @@ export default {
     return {
       // 版本号
       version: "3.5.0",
-      postNum:{
-
-      }
+      postNum:{}
     };
   },
 
