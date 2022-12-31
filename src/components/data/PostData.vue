@@ -2,7 +2,7 @@
  * @Author: hz hz15858@163.com
  * @Date: 2022-12-07 21:12:51
  * @LastEditors: hz hz15858@163.com
- * @LastEditTime: 2022-12-07 21:15:38
+ * @LastEditTime: 2022-12-31 15:33:24
  * @FilePath: /vuetest/src/components/data/PostData.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -19,6 +19,9 @@
                 <el-descriptions-item label="点赞数">18100000000</el-descriptions-item>
                 <el-descriptions-item label="评论数">100</el-descriptions-item>
                 <el-descriptions-item label="阅读量">100</el-descriptions-item>
+                <el-descriptions-item label="定时发布任务">
+              <el-tag size="small">10</el-tag>
+            </el-descriptions-item>
               </el-descriptions>
           </blockquote>
           <hr />
@@ -660,38 +663,106 @@
 
 <script>
 import {getPostNum} from '@/api/api.js'
+import { getCookie } from '@/utils/cookie.js'
 export default {
-  name: "Index",
-  data() {
-    return {
-      // 版本号
-      version: "3.5.0",
-      postNum:{}
-    };
-  },
+    name: "Index",
+    data() {
+        return {
+            // 版本号
+            version: "3.5.0",
+            postNum:{},
+            socket: "",
 
-  created(){
-    this.getPOSTNum({})
-  },
-  methods: {
-    goTarget(href) {
-      window.open(href, "_blank");
+        };
     },
 
-    handleDetails(){
-
+    created(){
+        //this.$ws.initWebSocket();
+    },
+    mounted() {
+        this.$ws.initWebSocket();
+        //this.init()
+        //console.log('ws===',this.$ws)
     },
 
-    getPOSTNum(params){
-      getPostNum({params})
-      .then(res =>{
-          if(res.code === 100000){
-            console.log('数量',res.data)
-            this.postNum = res.data;
-          }
-      })
-    }
-  },
+    computed:{
+        getWsMsg(){
+            console.log('computed')
+            return this.$store.state.webSocketMsg
+        }
+    },
+    watch:{
+        getWsMsg:{
+            handler: function(newVal) {
+                console.log('getWsMsg',newVal)
+                alert('接收到webSocket推送'+ newVal.data)
+            }
+        }
+    },
+
+
+    created(){
+        this.getPOSTNum({})
+    },
+    methods: {
+        goTarget(href) {
+            window.open(href, "_blank");
+        },
+
+        handleDetails(){
+
+        },
+
+        getPOSTNum(params){
+            getPostNum({params})
+            .then(res =>{
+                if(res.code === 100000){
+                    console.log('数量',res.data)
+                    this.postNum = res.data;
+                }
+            })
+        },
+        init: function () {
+            if(typeof(WebSocket) === "undefined"){
+                alert("您的浏览器不支持socket")
+            }else{
+                //let username = sessionStorage.getItem("username");// 获取登录用户
+                let userId =getCookie('userId');
+                console.log('userId:'+userId);
+
+                //var path = "ws://localhost:8080/websocket/"+username;// 请求路径
+                //var path ='ws://localhost:6001/websocket/zhangsan/eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxODMwMTMiLCJzdWIiOiJzdXBlcmFkbWluIiwiaWF0IjoxNjcyNDU1OTg4LCJleHAiOjE2NzI1NDIzODgsInVzZXJJZCI6IjE2NzEwNjY1MTcyMDQiLCJmdWxsTmFtZSI6InN1cGVyYWRtaW4iLCJyb2xlcyI6IjEyMyIsImVtYWlsIjoic3VwZXJhZG1pbiIsInBob25lIjoiMTgyMzY1ODE3NTAifQ.y3UN5oRLklPfQgaDM8kBo8vPdf8qnFyFPptZlkuLk5I';// websocket链接地址
+                var path ="ws://localhost:6001/api/pushMessage/"+userId;
+                // 实例化socket
+                this.socket = new WebSocket(path)
+                // 监听socket连接
+                this.socket.onopen = this.open
+                // 监听socket错误信息
+                this.socket.onerror = this.error
+                // 监听socket消息
+                this.socket.onmessage = this.getMessage
+            }
+            },
+            open: function () {
+                console.log("socket连接成功")
+            },
+            error: function () {
+                console.log("连接错误")
+            },
+            getMessage: function (msg) {
+                console.log('msg',msg)
+                let message= parseInt(msg.data);
+                console.log("message="+message);
+                alert(msg.data);
+            },
+            send: function () {
+                this.socket.send(params)
+            },
+            close: function () {
+                console.log("socket已经关闭")
+            }
+
+        },
 };
 </script>
 

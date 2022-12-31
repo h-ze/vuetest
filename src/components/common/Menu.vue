@@ -2,13 +2,13 @@
  * @Author: hz hz15858@163.com
  * @Date: 2022-12-03 14:42:05
  * @LastEditors: hz hz15858@163.com
- * @LastEditTime: 2022-12-03 16:06:58
+ * @LastEditTime: 2022-12-31 11:09:31
  * @FilePath: /vuetest/src/components/common/Header.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
     <div class="menu" >
-        <el-aside >
+        <el-aside width="200px">
         <el-menu
             router
             default-active="2"
