@@ -2,7 +2,7 @@
  * @Author: hz hz15858@163.com
  * @Date: 2022-12-01 11:47:58
  * @LastEditors: hz hz15858@163.com
- * @LastEditTime: 2022-12-31 15:46:23
+ * @LastEditTime: 2022-12-31 20:03:51
  * @FilePath: /vuetest/src/main.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -11,6 +11,9 @@ import App from './App.vue'
 //全局引用
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import './assets/styles/element-variables.scss'
+import '@/assets/styles/index.scss' // global css
+import '@/assets/styles/blog.scss' // 自定义 css
 Vue.use(ElementUI)
 
 import 'font-awesome/css/font-awesome.min.css'

@@ -15,7 +15,7 @@ let WS = {
         //let name = localStorage.getItem('username');
         console.log('初始化websocket')
         let userId =getCookie('userId');
-        this.$ws = new WebSocket("ws://localhost:6001/api/pushMessage/"+userId);//写入地址 这里的地址可以在initWebSocket方法加入参数
+        this.$ws = new WebSocket("ws://localhost:6001/wsapi/pushMessage/"+userId);//写入地址 这里的地址可以在initWebSocket方法加入参数
         this.$ws.onopen = this.wsOpen;
         this.$ws.onclose = this.wsClose;
         this.$ws.onmessage = this.wsMsg;

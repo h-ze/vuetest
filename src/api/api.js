@@ -2,7 +2,7 @@
  * @Author: hz hz15858@163.com
  * @Date: 2022-12-03 14:24:46
  * @LastEditors: hz hz15858@163.com
- * @LastEditTime: 2022-12-06 18:55:22
+ * @LastEditTime: 2022-12-31 20:32:43
  * @FilePath: /vuetest/src/api/api.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -143,5 +143,24 @@ export function deletePostStatus(params){
 }
 
 export function getPostNum(params){
-    return service.get('/postController/getPostNum',{params: params || {}})
+    return service.get('postController/getPostNum',{params: params || {}})
+}
+
+export function getPostTiming(params){
+    return service.get('timingPost/getTimingPost',{params: params || {}})
+}
+
+export function deletePostTiming(params){
+    return service.delete('timingPost/deleteTimingPost',{params: params||{}})
+}
+
+export function updatePostTiming(data){
+    return service({
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+         },
+        method:'put',
+        url: 'timingPost/updateTimingPost',
+        data
+    })
 }
